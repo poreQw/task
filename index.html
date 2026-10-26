@@ -127,6 +127,133 @@
       .sidebar { grid-template-columns: 1fr; }
       .result-head { flex-direction: column; }
     }
+    :root {
+      --ink: #28233f;
+      --muted: #817b98;
+      --line: #ece8f7;
+      --purple: #7255e8;
+      --purple-light: #f0ebff;
+      --surface: #fff;
+      --bg: #f7f5fc;
+      --green: #159b7a;
+    }
+    body {
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(ellipse at 8% 12%, #e8ddff 0, transparent 27rem),
+        radial-gradient(ellipse at 96% 36%, #ffe9e4 0, transparent 25rem);
+    }
+    .topbar {
+      height: 76px;
+      background: rgb(255 255 255 / 82%);
+      border-bottom-color: #eeeaf6;
+      backdrop-filter: blur(16px);
+    }
+    .brand { gap: 11px; font-size: 20px; }
+    .brand-mark {
+      width: 38px; height: 38px; border-radius: 14px;
+      background: linear-gradient(145deg, #896bf5, #6548dd);
+      box-shadow: 0 7px 16px #7255e83d;
+    }
+    .top-date {
+      padding: 9px 13px; border: 1px solid #eeeaf6; border-radius: 99px;
+      background: #fff; font-size: 12px;
+    }
+    main { margin-top: 34px; }
+    .intro {
+      position: relative; isolation: isolate; overflow: hidden;
+      margin-bottom: 24px; padding: 30px 34px;
+      border: 1px solid rgb(255 255 255 / 90%); border-radius: 25px;
+      background: linear-gradient(118deg, #eee8ff 0%, #f8f2ff 55%, #fff0e9 100%);
+      box-shadow: 0 12px 30px #51427a0c;
+    }
+    .intro::after {
+      position: absolute; z-index: -1; top: -74px; right: 7%;
+      width: 220px; height: 220px; border: 28px solid rgb(255 255 255 / 38%);
+      border-radius: 50%; content: "";
+    }
+    .eyebrow {
+      display: inline-flex; padding: 7px 11px; border: 1px solid #fff;
+      border-radius: 99px; background: rgb(255 255 255 / 72%);
+      color: #6b50d5; font-size: 10px; letter-spacing: 1.4px;
+    }
+    h1 { margin-top: 15px; font-size: clamp(28px, 4vw, 38px); letter-spacing: -1.8px; }
+    .intro p { font-size: 14px; }
+    .layout { gap: 20px; }
+    .card {
+      border-color: #eeeaf6; border-radius: 21px;
+      box-shadow: 0 10px 30px #35275a0b;
+    }
+    .form-card { padding: 25px; }
+    .quick-notes {
+      margin-bottom: 22px; padding: 18px; border-color: #e9e1ff;
+      border-radius: 17px; background: linear-gradient(135deg, #f6f2ff, #fbf9ff);
+    }
+    .quick-notes label { color: #4b3a82; font-size: 14px; }
+    .quick-notes textarea {
+      border-color: #e8e2f4; border-radius: 12px; background: #fff;
+      font-size: 14px;
+    }
+    .question:not(:first-child) {
+      align-items: flex-start; gap: 14px; margin-bottom: 13px;
+      padding: 15px; border: 1px solid #f0edf6; border-radius: 16px;
+      background: #fff;
+    }
+    .question h2 {
+      flex-basis: 245px; padding-top: 4px; color: #51476b;
+      font-size: 13px; line-height: 1.55;
+    }
+    .question:not([data-step="0"]) textarea {
+      min-height: 116px; padding: 15px; border-color: #eeeaf5;
+      border-radius: 12px; background: #fcfbfe; font-size: 15px;
+    }
+    textarea:focus, input[type="text"]:focus, input[type="date"]:focus,
+    .quick-notes textarea:focus {
+      border-color: #9b87f2; box-shadow: 0 0 0 4px #7255e817;
+    }
+    .identity-label { color: #635b78; }
+    .identity-fields input[type="text"], .identity-fields input[type="date"] {
+      border-color: #eeeaf5; border-radius: 11px; background: #fcfbfe;
+    }
+    .btn {
+      border-radius: 12px; padding: 12px 16px;
+      transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+    }
+    .btn:hover:not(:disabled) { transform: translateY(-1px); }
+    .btn-primary {
+      background: linear-gradient(135deg, #8062f0, #684bdd);
+      box-shadow: 0 6px 14px #7255e82b;
+    }
+    .btn-primary:hover { background: linear-gradient(135deg, #7254e5, #5e40d2); box-shadow: 0 8px 18px #7255e83b; }
+    .btn-secondary { color: #655c7d; background: #f2eff8; }
+    .btn-secondary:hover { background: #eae5f4; }
+    .date-card, .archive-card { border-radius: 19px; }
+    .archive-head h2 { color: #44395e; }
+    .count { background: #f0ebff; color: #6b50d5; }
+    .entry { border-color: #f0edf6; border-radius: 12px; background: #fdfcff; }
+    .entry:hover, .entry.selected { border-color: #cfc2ff; background: #f7f3ff; }
+    .result { padding: 25px; }
+    .result-body {
+      padding: 18px; border-radius: 14px; background: #faf8ff;
+      color: #403851;
+    }
+    .toast { border-radius: 99px; box-shadow: 0 8px 24px #24263a30; }
+    @media (max-width: 760px) {
+      .topbar { height: 66px; }
+      main { margin-top: 23px; }
+      .intro { padding: 24px 22px; border-radius: 21px; }
+      .intro::after { right: -90px; }
+      .form-card { padding: 17px; }
+      .question:not(:first-child) { padding: 13px; }
+      .question:not([data-step="0"]) textarea { min-height: 108px; }
+      .step-actions { flex-direction: column; }
+      .form-tools, .step-actions > .btn { width: 100%; }
+      .form-tools .btn { width: 100%; }
+    }
+    @media print {
+      body { background: #fff; }
+      .result-body { padding: 0; background: #fff; color: #111; }
+    }
   </style>
 </head>
 <body>
@@ -136,9 +263,9 @@
   </header>
   <main>
     <section class="intro">
-      <div class="eyebrow">MY DAILY WORK LOG</div>
+      <div class="eyebrow">YOUR DAY, YOUR WAY</div>
       <h1>오늘의 업무일지</h1>
-      <p>회사에서 받은 양식 순서대로 작성해 저장하세요.</p>
+      <p>오늘의 작은 성취도 가볍게 기록해 보세요.</p>
     </section>
     <div class="layout">
       <section>

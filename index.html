@@ -67,6 +67,7 @@
     .quick-notes-footer span { color: var(--muted); font-size: 11px; }
     .form-tools { display: flex; flex-wrap: wrap; gap: 8px; }
     .step-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+    .save-help { margin: 10px 0 0; color: var(--muted); font-size: 12px; text-align: right; }
     .btn { border: 0; border-radius: 10px; padding: 11px 17px; font-weight: 700; font-size: 13px; }
     .btn-primary { color: white; background: var(--purple); }
     .btn-primary:hover { background: #5149c6; }
@@ -80,6 +81,8 @@
     .date-title { margin: 0 0 14px; font-size: 14px; }
     .date-input { padding: 10px 12px !important; font-size: 13px; }
     .archive-card { padding: 21px; }
+    .archive-tools { display: grid; gap: 8px; margin-bottom: 14px; }
+    .archive-tools input { min-width: 0; width: 100%; padding: 9px 10px; border: 1px solid var(--line); border-radius: 9px; }
     .archive-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
     .archive-head h2 { margin: 0; font-size: 15px; }
     .count { padding: 4px 8px; border-radius: 20px; background: var(--purple-light); color: var(--purple); font-weight: 700; font-size: 11px; }
@@ -91,6 +94,32 @@
     .entry-preview { overflow: hidden; max-width: 200px; margin-top: 4px; color: var(--muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
     .entry-delete { align-self: center; border: 0; color: #a0a4b1; background: transparent; font-size: 16px; }
     .entry-delete:hover { color: #d04b61; }
+    .dashboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .stat { padding: 12px 8px; border-radius: 11px; background: #f7f6ff; text-align: center; }
+    .stat strong { display: block; color: var(--purple); font-size: 20px; }
+    .stat span { color: var(--muted); font-size: 10px; }
+    .calendar-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .calendar-head h2 { margin: 0; font-size: 15px; }
+    .calendar-nav { display: flex; gap: 5px; }
+    .calendar-nav button { width: 28px; height: 28px; border: 0; border-radius: 8px; background: #f1f2f6; color: var(--ink); }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+    .calendar-weekday, .calendar-day { display: grid; place-items: center; min-height: 30px; font-size: 11px; }
+    .calendar-weekday { color: var(--muted); font-weight: 700; }
+    .calendar-day { border: 0; border-radius: 8px; background: transparent; color: var(--ink); }
+    .calendar-day:hover { background: #f1f2f6; }
+    .calendar-day.has-log { color: var(--purple); background: var(--purple-light); font-weight: 800; }
+    .calendar-day.selected { color: white; background: var(--purple); }
+    .calendar-day:disabled { cursor: default; }
+    .task-list { display: grid; gap: 6px; margin-top: 10px; }
+    .task-item { display: flex; align-items: flex-start; gap: 8px; color: #555b6e; font-size: 12px; line-height: 1.5; }
+    .task-item input { margin: 2px 0 0; accent-color: var(--purple); }
+    .task-item.done span { color: #999eae; text-decoration: line-through; }
+    .template-tools, .backup-tools { display: flex; gap: 8px; }
+    .template-tools select { flex: 1; min-width: 0; padding: 9px; border: 1px solid var(--line); border-radius: 9px; background: #fff; color: var(--ink); }
+    .template-tools input { flex: 1; min-width: 0; padding: 9px; border: 1px solid var(--line); border-radius: 9px; }
+    .small-btn { padding: 8px 10px; border: 0; border-radius: 9px; background: #f1f2f6; color: #555b6e; font-size: 11px; font-weight: 700; }
+    .backup-tools .small-btn { flex: 1; }
+    .section-title { margin: 0 0 12px; font-size: 15px; }
     .result { display: none; margin-top: 22px; padding: 23px; }
     .result.show { display: block; }
     .result-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
@@ -237,9 +266,35 @@
       padding: 18px; border-radius: 14px; background: #faf8ff;
       color: #403851;
     }
+    .app-shell { display: grid; grid-template-columns: 270px minmax(0, 1fr); min-height: 100vh; }
+    .side-nav { position: sticky; top: 0; display: flex; flex-direction: column; gap: 10px; height: 100vh; padding: 23px 17px; background: #142d52; }
+    .topbar { padding-right: max(24px, calc((100vw - 270px - 1120px) / 2)); padding-left: max(24px, calc((100vw - 270px - 1120px) / 2)); }
+    .nav-link { display: block; padding: 14px 15px; border-radius: 15px; color: #dbe7ff; text-decoration: none; transition: background .15s; }
+    .nav-link:hover, .nav-link.active { background: #294a76; }
+    .nav-title { display: flex; align-items: center; gap: 11px; font-size: 18px; line-height: 1.5; }
+    .nav-icon { flex: 0 0 22px; width: 22px; height: 22px; color: #a9c8ff; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .nav-link.active .nav-icon { color: #fff; }
+    .nav-caption { display: block; margin-top: 2px; color: #9bb0d0; font-size: 13px; }
+    .app-main { min-width: 0; }
+    .view-panel { display: none; }
+    .view-panel.active { display: block; }
+    .guide-card { margin-top: 22px; padding: 23px; }
+    .guide-card h2 { margin: 0 0 12px; font-size: 17px; }
+    .guide-card p { margin: 7px 0; color: #666b7d; font-size: 13px; line-height: 1.7; }
+    .guide-card a { color: var(--purple); }
     .toast { border-radius: 99px; box-shadow: 0 8px 24px #24263a30; }
+    @media (max-width: 1050px) {
+      .app-shell { grid-template-columns: 220px minmax(0, 1fr); }
+      .side-nav { padding: 18px 12px; }
+    }
     @media (max-width: 760px) {
-      .topbar { height: 66px; }
+      .app-shell { display: block; }
+      .side-nav { position: sticky; z-index: 5; top: 0; flex-direction: row; gap: 5px; height: auto; overflow-x: auto; padding: 8px; }
+      .nav-link { flex: 0 0 auto; padding: 9px 11px; }
+      .nav-title { gap: 7px; font-size: 12px; white-space: nowrap; }
+      .nav-icon { flex-basis: 18px; width: 18px; height: 18px; }
+      .nav-caption { display: none; }
+      .topbar { height: 66px; padding: 0 20px; }
       main { margin-top: 23px; }
       .intro { padding: 24px 22px; border-radius: 21px; }
       .intro::after { right: -90px; }
@@ -252,16 +307,44 @@
     }
     @media print {
       body { background: #fff; }
+      .side-nav, .guide-card { display: none !important; }
+      .app-shell { display: block; }
+      .view-panel { display: none !important; }
+      #reportPanel { display: block !important; }
       .result-body { padding: 0; background: #fff; color: #111; }
     }
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand"><span class="brand-mark">하</span> 하루기록</div>
-    <div class="top-date" id="topDate"></div>
-  </header>
-  <main>
+  <div class="app-shell">
+    <nav class="side-nav" aria-label="主导航">
+      <a class="nav-link active" href="#dashboardPanel">
+        <span class="nav-title"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M8 16v-3m4 3V8m4 8v-5"/></svg>整体状况</span>
+        <span class="nav-caption">仪表盘</span>
+      </a>
+      <a class="nav-link" href="#logListPanel">
+        <span class="nav-title"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r=".8"/><circle cx="4.5" cy="12" r=".8"/><circle cx="4.5" cy="18" r=".8"/></svg>工作日志列表</span>
+        <span class="nav-caption">列表 / 列表</span>
+      </a>
+      <a class="nav-link" href="#writeLogPanel">
+        <span class="nav-title"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 5.5 18.5 10.5M4 20l4.2-.9L19 8.3a2.1 2.1 0 0 0-3-3L5.2 16.1 4 20Z"/><path d="M4 20h7"/></svg>写工作日志</span>
+        <span class="nav-caption">编辑 / 编辑</span>
+      </a>
+      <a class="nav-link" href="#reportPanel">
+        <span class="nav-title"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h8l4 4v13H6z"/><path d="M14 3.5v4h4M9 12h6m-6 3h6"/><path d="M9 18h4"/></svg>详细和PDF输出</span>
+        <span class="nav-caption">报到</span>
+      </a>
+      <a class="nav-link" href="#guidePanel">
+        <span class="nav-title"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7.2c-2-1.8-5-2.4-8-1.7v12c3.1-.7 6-.1 8 1.7m0-12c2-1.8 4.9-2.4 8-1.7v12c-3.1-.7-6-.1-8 1.7m0-12v12"/><path d="m18.5 2 .6 1.6 1.7.6-1.7.6-.6 1.7-.6-1.7-1.7-.6 1.7-.6z"/></svg>发展指南</span>
+        <span class="nav-caption">规格</span>
+      </a>
+    </nav>
+    <div class="app-main">
+      <header class="topbar">
+        <div class="brand"><span class="brand-mark">하</span> 하루기록</div>
+        <div class="top-date" id="topDate"></div>
+      </header>
+      <main>
     <section class="intro">
       <div class="eyebrow">YOUR DAY, YOUR WAY</div>
       <h1>오늘의 업무일지</h1>
@@ -308,6 +391,7 @@
             <div class="question" data-step="5">
               <h2>⑤ 내일 할 일 (明日)</h2>
               <textarea id="next" placeholder="내일 할 일을 입력하세요."></textarea>
+              <div class="task-list" id="taskList" aria-label="내일 할 일 체크리스트"></div>
             </div>
             <div class="step-actions">
               <div class="form-tools">
@@ -316,6 +400,7 @@
               <button class="btn btn-primary" id="saveBtn" type="submit">업무일지 저장하기</button>
               <button class="btn btn-secondary" id="savePdfBtn" type="button">저장 후 PDF 다운로드</button>
             </div>
+            <p class="save-help">업무일지 항목에 입력한 내용은 날짜별로 자동 저장되며, 지난 업무일지 목록에서 다시 볼 수 있어요.</p>
           </form>
         </div>
         <section class="card result" id="result">
@@ -333,13 +418,61 @@
         </section>
       </section>
       <aside class="sidebar">
+        <section class="card archive-card">
+          <h2 class="section-title">기록 통계</h2>
+          <div class="dashboard-grid">
+            <div class="stat"><strong id="statTotal">0</strong><span>전체 기록일</span></div>
+            <div class="stat"><strong id="statStreak">0</strong><span>연속 기록일</span></div>
+            <div class="stat"><strong id="statWeek">0</strong><span>최근 7일</span></div>
+          </div>
+        </section>
+        <section class="card archive-card">
+          <div class="calendar-head">
+            <h2 id="calendarMonth">달력</h2>
+            <div class="calendar-nav">
+              <button id="calendarPrev" type="button" aria-label="이전 달">‹</button>
+              <button id="calendarNext" type="button" aria-label="다음 달">›</button>
+            </div>
+          </div>
+          <div class="calendar-grid" id="calendarGrid"></div>
+        </section>
+        <section class="card archive-card">
+          <h2 class="section-title">자주 쓰는 템플릿</h2>
+          <div class="template-tools">
+            <select id="templateSelect" aria-label="업무 템플릿"><option value="">템플릿 선택</option></select>
+            <button class="small-btn" id="applyTemplateBtn" type="button">적용</button>
+          </div>
+          <div class="template-tools" style="margin-top:8px">
+            <input id="templateName" type="text" placeholder="새 템플릿 이름" aria-label="새 템플릿 이름">
+            <button class="small-btn" id="saveTemplateBtn" type="button">저장</button>
+          </div>
+        </section>
         <div class="card archive-card">
           <div class="archive-head"><h2>지난 업무일지</h2><span class="count" id="entryCount">0개</span></div>
+          <div class="archive-tools">
+            <input id="searchLogs" type="search" placeholder="업무 내용 검색" aria-label="업무 내용 검색">
+            <input id="filterFrom" type="date" aria-label="시작 날짜">
+            <input id="filterTo" type="date" aria-label="종료 날짜">
+          </div>
           <div class="entry-list" id="entryList"></div>
+          <div class="backup-tools" style="margin-top:12px">
+            <button class="small-btn" id="exportBackupBtn" type="button">전체 백업</button>
+            <button class="small-btn" id="importBackupBtn" type="button">백업 복원</button>
+            <input id="backupFile" type="file" accept="application/json,.json" hidden>
+          </div>
         </div>
       </aside>
     </div>
-  </main>
+    <section class="card guide-card" id="guideContent">
+      <h2>업무일지 사용 가이드</h2>
+      <p>1. 날짜와 업무 내용을 입력하면 브라우저에 자동 저장됩니다. 항목을 여러 줄로 나누면 내일 할 일을 체크리스트로 사용할 수 있어요.</p>
+      <p>2. 지난 기록은 검색, 날짜 필터 또는 달력에서 찾아 열 수 있습니다. 템플릿을 저장해 반복 업무를 빠르게 작성하세요.</p>
+      <p>3. 전체 백업은 기록과 템플릿을 JSON 파일로 내려받습니다. 다른 브라우저에서 복원하려면 해당 파일을 선택하세요.</p>
+      <p>4. 데이터는 이 브라우저에만 저장되며 서버로 전송되지 않습니다. 브라우저 데이터를 지우기 전에 백업 파일을 보관하세요.</p>
+    </section>
+      </main>
+    </div>
+  </div>
   <div class="toast" id="toast" role="status"></div>
   <script>
     (() => {
@@ -348,9 +481,13 @@
       const dateInput = document.getElementById("logDate");
       const result = document.getElementById("result");
       const storeKey = "haru-record-work-logs";
+      const templateStoreKey = "haru-record-templates";
+      const taskList = document.getElementById("taskList");
+      const today = new Date();
+      let currentTasks = [];
+      let calendarMonth = new Date(today.getFullYear(), today.getMonth(), 1);
       let selectedDate = "";
       let toastTimer;
-      const today = new Date();
       const localDate = new Date(today.getTime() - today.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
       dateInput.value = localDate;
       document.getElementById("topDate").textContent = new Intl.DateTimeFormat("ko-KR", {
@@ -362,22 +499,35 @@
           const logs = JSON.parse(localStorage.getItem(storeKey) || "{}");
           if (!logs || typeof logs !== "object" || Array.isArray(logs)) return {};
           return Object.fromEntries(Object.entries(logs).map(([date, log]) => {
-            const entry = log && typeof log === "object" ? log : {};
-            const oldCompleted = [entry.work, entry.achievement].filter((value) => typeof value === "string" && value.trim());
-            return [date, {
-              employeeName: typeof entry.employeeName === "string" ? entry.employeeName : "",
-              assigned: typeof entry.assigned === "string" ? entry.assigned : "",
-              completed: typeof entry.completed === "string" ? entry.completed : oldCompleted.join("\n"),
-              unresolved: typeof entry.unresolved === "string" ? entry.unresolved : typeof entry.blocker === "string" ? entry.blocker : "",
-              learned: typeof entry.learned === "string" ? entry.learned : "",
-              next: typeof entry.next === "string" ? entry.next : ""
-            }];
+            return [date, normalizeLog(log)];
           }));
         } catch (error) {
           console.error("업무일지를 불러오지 못했습니다.", error);
           showToast("저장된 업무일지를 불러오지 못했어요.");
           return {};
         }
+      }
+
+      function normalizeLog(log) {
+        const entry = log && typeof log === "object" && !Array.isArray(log) ? log : {};
+        const oldCompleted = [entry.work, entry.achievement].filter((value) => typeof value === "string" && value.trim());
+        const normalized = {
+          employeeName: typeof entry.employeeName === "string" ? entry.employeeName : "",
+          assigned: typeof entry.assigned === "string" ? entry.assigned : "",
+          completed: typeof entry.completed === "string" ? entry.completed : oldCompleted.join("\n"),
+          unresolved: typeof entry.unresolved === "string" ? entry.unresolved : typeof entry.blocker === "string" ? entry.blocker : "",
+          learned: typeof entry.learned === "string" ? entry.learned : "",
+          next: typeof entry.next === "string" ? entry.next : ""
+        };
+        normalized.tasks = Array.isArray(entry.tasks)
+          ? entry.tasks.filter((task) => task && typeof task.text === "string" && task.text.trim())
+            .map((task) => ({ text: task.text.trim(), done: task.done === true }))
+          : normalized.next.split(/\r?\n/).map((text) => text.trim()).filter(Boolean).map((text) => ({ text, done: false }));
+        return normalized;
+      }
+
+      function dateKey(date) {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
       }
 
       function showToast(message) {
@@ -390,12 +540,15 @@
 
       function makeReport(date, log) {
         const reportDate = date.replaceAll("-", ".");
+        const nextTasks = Array.isArray(log.tasks) && log.tasks.length
+          ? log.tasks.map((task) => `${task.done ? "☑" : "☐"} ${task.text}`).join("\n")
+          : log.next;
         const sections = [
           ["① 오늘 지시받은 업무 (今日指派工作)", log.assigned],
           ["② 오늘 완료한 업무 (今日完成工作)", log.completed],
           ["③ 해결하지 못한 문제 (未解决问题)", log.unresolved],
           ["④ 오늘 배운 내용 (今日 容 学习内)", log.learned],
-          ["⑤ 내일 할 일 (明日)", log.next]
+          ["⑤ 내일 할 일 (明日)", nextTasks]
         ];
         return [
           "일일 업무일지",
@@ -637,6 +790,7 @@
         } else {
           showToast("자동 분류할 수 있는 문장이 없어요. 메모를 직접 항목에 옮겨 주세요.");
         }
+        if (classifiedCount) saveDraft();
       }
 
       function polishText(text) {
@@ -657,34 +811,169 @@
         }).filter(Boolean).join(" / ");
       }
 
+      function syncTasksFromText() {
+        const previous = new Map(currentTasks.map((task) => [task.text, task.done]));
+        currentTasks = document.getElementById("next").value.split(/\r?\n/)
+          .map((text) => text.trim()).filter(Boolean)
+          .map((text) => ({ text, done: previous.get(text) === true }));
+        renderTaskList();
+      }
+
+      function renderTaskList() {
+        taskList.replaceChildren();
+        currentTasks.forEach((task, index) => {
+          const label = document.createElement("label");
+          label.className = `task-item${task.done ? " done" : ""}`;
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.checked = task.done;
+          checkbox.setAttribute("aria-label", `${task.text} 완료`);
+          checkbox.addEventListener("change", () => {
+            currentTasks[index].done = checkbox.checked;
+            renderTaskList();
+            saveDraft(false);
+          });
+          const text = document.createElement("span");
+          text.textContent = task.text;
+          label.append(checkbox, text);
+          taskList.append(label);
+        });
+      }
+
+      function renderDashboard() {
+        const dates = Object.keys(getLogs()).sort();
+        document.getElementById("statTotal").textContent = String(dates.length);
+        const dateSet = new Set(dates);
+        const dayOffset = dateSet.has(localDate) ? 0 : 1;
+        let cursor = new Date(`${localDate}T00:00:00`);
+        cursor.setDate(cursor.getDate() - dayOffset);
+        let streak = 0;
+        while (dateSet.has(dateKey(cursor))) {
+          streak += 1;
+          cursor.setDate(cursor.getDate() - 1);
+        }
+        document.getElementById("statStreak").textContent = String(streak);
+        const weekStart = new Date(`${localDate}T00:00:00`);
+        weekStart.setDate(weekStart.getDate() - 6);
+        const weekStartDate = dateKey(weekStart);
+        document.getElementById("statWeek").textContent = String(dates.filter((date) => date >= weekStartDate && date <= localDate).length);
+      }
+
+      function renderCalendar() {
+        const grid = document.getElementById("calendarGrid");
+        const logs = getLogs();
+        const year = calendarMonth.getFullYear();
+        const month = calendarMonth.getMonth();
+        document.getElementById("calendarMonth").textContent = new Intl.DateTimeFormat("ko-KR", {
+          year: "numeric", month: "long"
+        }).format(calendarMonth);
+        grid.replaceChildren();
+        ["일", "월", "화", "수", "목", "금", "토"].forEach((day) => {
+          const label = document.createElement("div");
+          label.className = "calendar-weekday";
+          label.textContent = day;
+          grid.append(label);
+        });
+        const firstWeekday = new Date(year, month, 1).getDay();
+        const dayCount = new Date(year, month + 1, 0).getDate();
+        const cellCount = Math.ceil((firstWeekday + dayCount) / 7) * 7;
+        for (let cell = 0; cell < cellCount; cell += 1) {
+          if (cell < firstWeekday || cell >= firstWeekday + dayCount) {
+            grid.append(document.createElement("div"));
+            continue;
+          }
+          const day = cell - firstWeekday + 1;
+          const date = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = `calendar-day${logs[date] ? " has-log" : ""}${date === dateInput.value ? " selected" : ""}`;
+          button.textContent = String(day);
+          button.setAttribute("aria-label", `${date}${logs[date] ? " 기록 있음" : ""}`);
+          button.addEventListener("click", () => {
+            dateInput.value = date;
+            dateInput.dispatchEvent(new Event("change"));
+          });
+          grid.append(button);
+        }
+      }
+
+      function getTemplates() {
+        try {
+          const templates = JSON.parse(localStorage.getItem(templateStoreKey) || "[]");
+          if (!Array.isArray(templates)) throw new Error("템플릿 데이터 형식이 올바르지 않습니다.");
+          return templates.filter((template) => template && typeof template.id === "string" &&
+            typeof template.name === "string" && template.fields && typeof template.fields === "object");
+        } catch (error) {
+          console.error("템플릿을 불러오지 못했습니다.", error);
+          showToast("템플릿을 불러오지 못했어요. 저장 데이터를 확인해 주세요.");
+          return [];
+        }
+      }
+
+      function renderTemplates() {
+        const select = document.getElementById("templateSelect");
+        select.replaceChildren(new Option("템플릿 선택", ""));
+        getTemplates().forEach((template) => select.add(new Option(template.name, template.id)));
+      }
+
+      function downloadJson(filename, data) {
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        link.click();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+
+      function isValidDateKey(date) {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return false;
+        const parsed = new Date(`${date}T00:00:00`);
+        return !Number.isNaN(parsed.getTime()) &&
+          `${parsed.getFullYear()}-${String(parsed.getMonth() + 1).padStart(2, "0")}-${String(parsed.getDate()).padStart(2, "0")}` === date;
+      }
+
       function renderLog(date, log) {
         selectedDate = date;
         dateInput.value = date;
+        const normalized = normalizeLog(log);
+        currentTasks = normalized.tasks;
         document.getElementById("quickNotes").value = "";
         fields.forEach((field) => {
           const input = document.getElementById(field);
-          input.value = log[field] || "";
+          input.value = normalized[field] || "";
           if (input.tagName === "TEXTAREA") resizeEntry(input);
         });
         document.getElementById("resultDate").textContent = new Intl.DateTimeFormat("ko-KR", {
           year: "numeric", month: "long", day: "numeric"
         }).format(new Date(`${date}T00:00:00`));
-        document.getElementById("resultBody").textContent = makeReport(date, log);
+        document.getElementById("resultBody").textContent = makeReport(date, normalized);
         result.classList.add("show");
+        renderTaskList();
         renderEntries();
       }
 
       function renderEntries() {
         const logs = getLogs();
-        const dates = Object.keys(logs).sort((a, b) => b.localeCompare(a));
+        const query = document.getElementById("searchLogs").value.trim().toLocaleLowerCase();
+        const from = document.getElementById("filterFrom").value;
+        const to = document.getElementById("filterTo").value;
+        const allDates = Object.keys(logs).sort((a, b) => b.localeCompare(a));
+        const dates = allDates.filter((date) => {
+          const log = logs[date];
+          const searchable = fields.map((field) => log[field]).join("\n").toLocaleLowerCase();
+          return (!query || searchable.includes(query)) && (!from || date >= from) && (!to || date <= to);
+        });
         const list = document.getElementById("entryList");
-        document.getElementById("entryCount").textContent = `${dates.length}개`;
+        document.getElementById("entryCount").textContent = `${dates.length}/${allDates.length}개`;
         list.replaceChildren();
         if (!dates.length) {
           const empty = document.createElement("div");
           empty.className = "empty";
-          empty.textContent = "아직 기록이 없어요.\n첫 업무일지를 남겨 보세요!";
+          empty.textContent = allDates.length ? "조건에 맞는 업무일지가 없어요." : "아직 기록이 없어요.\n첫 업무일지를 남겨 보세요!";
           list.append(empty);
+          renderDashboard();
+          renderCalendar();
           return;
         }
         dates.forEach((date) => {
@@ -724,10 +1013,15 @@
               showToast("삭제하지 못했어요. 브라우저 저장 공간을 확인해 주세요.");
             }
           });
-          item.addEventListener("click", () => renderLog(date, logs[date]));
+          item.addEventListener("click", () => {
+            renderLog(date, logs[date]);
+            showView("reportPanel");
+          });
           item.append(text, remove);
           list.append(item);
         });
+        renderDashboard();
+        renderCalendar();
       }
 
       dateInput.addEventListener("change", () => {
@@ -737,10 +1031,12 @@
         if (existing) renderLog(date, existing);
         else {
           selectedDate = "";
+          currentTasks = [];
           result.classList.remove("show");
           document.getElementById("quickNotes").value = "";
           fields.slice(1).forEach((field) => { document.getElementById(field).value = ""; });
           dateInput.value = date;
+          renderTaskList();
           renderEntries();
         }
       });
@@ -748,6 +1044,7 @@
       fields.slice(1).forEach((field) => {
         document.getElementById(field).addEventListener("input", (event) => resizeEntry(event.currentTarget));
       });
+      fields.forEach((field) => document.getElementById(field).addEventListener("input", () => saveDraft()));
 
       document.getElementById("organizeNotesBtn").addEventListener("click", organizeNotes);
       document.getElementById("polishBtn").addEventListener("click", () => {
@@ -759,6 +1056,7 @@
           input.value = polished;
           resizeEntry(input);
         });
+        if (changed) saveDraft();
         showToast(changed ? `${changed}개 항목을 업무일지 문장으로 다듬었어요.` : "다듬을 문장이 없거나 이미 문장 형식이에요.");
       });
 
@@ -770,11 +1068,14 @@
           dateInput.focus();
           return false;
         }
+        syncTasksFromText();
+        log.tasks = currentTasks;
         const logs = getLogs();
         logs[date] = log;
         try {
           localStorage.setItem(storeKey, JSON.stringify(logs));
           renderLog(date, log);
+          showView("reportPanel");
           showToast("업무일지를 저장했어요.");
           if (openPdfAfterSave) downloadPdf();
           return true;
@@ -782,6 +1083,26 @@
           console.error("업무일지를 저장하지 못했습니다.", error);
           showToast("저장하지 못했어요. 브라우저 저장 공간을 확인해 주세요.");
           return false;
+        }
+      }
+
+      function saveDraft(updateTasks = true) {
+        const date = dateInput.value;
+        if (!date) return;
+        if (updateTasks) syncTasksFromText();
+        const log = Object.fromEntries(fields.map((field) => [field, document.getElementById(field).value.trim()]));
+        log.tasks = currentTasks;
+        const logs = getLogs();
+        logs[date] = log;
+        try {
+          localStorage.setItem(storeKey, JSON.stringify(logs));
+          if (selectedDate === date && result.classList.contains("show")) {
+            document.getElementById("resultBody").textContent = makeReport(date, log);
+          }
+          renderEntries();
+        } catch (error) {
+          console.error("업무일지를 자동 저장하지 못했습니다.", error);
+          showToast("자동 저장하지 못했어요. 브라우저 저장 공간을 확인해 주세요.");
         }
       }
 
@@ -835,6 +1156,169 @@
       });
       document.getElementById("pdfBtn").addEventListener("click", downloadPdf);
 
+      const navLinks = [...document.querySelectorAll(".nav-link")];
+      const main = document.querySelector("main");
+      const layout = main.querySelector(".layout");
+      const sidebar = layout.querySelector(".sidebar");
+      const [dashboardStats, calendar, templates, logList] = sidebar.querySelectorAll(":scope > .archive-card");
+      const intro = main.querySelector(".intro");
+      const formCard = layout.querySelector(".form-card");
+      const guide = document.getElementById("guideContent");
+      const views = new Map();
+      [
+        ["dashboardPanel", [intro, dashboardStats, calendar]],
+        ["logListPanel", [logList]],
+        ["writeLogPanel", [formCard, templates]],
+        ["reportPanel", [result]],
+        ["guidePanel", [guide]]
+      ].forEach(([id, content]) => {
+        const view = document.createElement("section");
+        view.id = id;
+        view.className = "view-panel";
+        content.forEach((element) => view.append(element));
+        views.set(id, view);
+      });
+      main.replaceChildren(...views.values());
+
+      const activateNav = (activeLink) => {
+        navLinks.forEach((link) => link.classList.toggle("active", link.hash === `#${activeLink}`));
+      };
+      function showView(viewId) {
+        const view = views.get(viewId);
+        if (!view) return;
+        views.forEach((panel) => panel.classList.toggle("active", panel === view));
+        activateNav(viewId);
+        window.history.replaceState(null, "", `#${viewId}`);
+      }
+      const initialView = views.has(location.hash.slice(1)) ? location.hash.slice(1) : "dashboardPanel";
+      showView(initialView);
+      navLinks.forEach((link) => {
+        link.addEventListener("click", (event) => {
+          const viewId = link.hash.slice(1);
+          if (viewId === "reportPanel" && !result.classList.contains("show")) {
+            event.preventDefault();
+            showToast("먼저 업무일지를 저장하거나 지난 기록을 선택해 주세요.");
+            showView("writeLogPanel");
+            return;
+          }
+          event.preventDefault();
+          showView(viewId);
+        });
+      });
+
+      document.getElementById("searchLogs").addEventListener("input", renderEntries);
+      document.getElementById("filterFrom").addEventListener("change", renderEntries);
+      document.getElementById("filterTo").addEventListener("change", renderEntries);
+      document.getElementById("calendarPrev").addEventListener("click", () => {
+        calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1);
+        renderCalendar();
+      });
+      document.getElementById("calendarNext").addEventListener("click", () => {
+        calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1);
+        renderCalendar();
+      });
+
+      document.getElementById("saveTemplateBtn").addEventListener("click", () => {
+        const nameInput = document.getElementById("templateName");
+        const name = nameInput.value.trim();
+        if (!name) {
+          showToast("템플릿 이름을 입력해 주세요.");
+          nameInput.focus();
+          return;
+        }
+        const templates = getTemplates();
+        templates.push({
+          id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+          name: name.trim(),
+          fields: Object.fromEntries(fields.slice(1).map((field) => [field, document.getElementById(field).value.trim()]))
+        });
+        try {
+          localStorage.setItem(templateStoreKey, JSON.stringify(templates));
+          renderTemplates();
+          nameInput.value = "";
+          showToast("템플릿을 저장했어요.");
+        } catch (error) {
+          console.error("템플릿을 저장하지 못했습니다.", error);
+          showToast("템플릿을 저장하지 못했어요. 브라우저 저장 공간을 확인해 주세요.");
+        }
+      });
+      document.getElementById("applyTemplateBtn").addEventListener("click", () => {
+        const template = getTemplates().find((entry) => entry.id === document.getElementById("templateSelect").value);
+        if (!template) {
+          showToast("먼저 적용할 템플릿을 선택해 주세요.");
+          return;
+        }
+        fields.slice(1).forEach((field) => {
+          const input = document.getElementById(field);
+          input.value = typeof template.fields[field] === "string" ? template.fields[field] : "";
+          if (input.tagName === "TEXTAREA") resizeEntry(input);
+        });
+        saveDraft();
+        showToast("템플릿을 적용했어요.");
+      });
+
+      document.getElementById("exportBackupBtn").addEventListener("click", () => {
+        try {
+          downloadJson(`haru-record-backup-${localDate}.json`, {
+            format: "haru-record-backup",
+            version: 1,
+            exportedAt: new Date().toISOString(),
+            logs: getLogs(),
+            templates: getTemplates()
+          });
+          showToast("전체 기록과 템플릿을 백업했어요.");
+        } catch (error) {
+          console.error("백업을 내보내지 못했습니다.", error);
+          showToast("백업 파일을 만들지 못했어요.");
+        }
+      });
+      const backupFile = document.getElementById("backupFile");
+      document.getElementById("importBackupBtn").addEventListener("click", () => backupFile.click());
+      backupFile.addEventListener("change", async () => {
+        const file = backupFile.files[0];
+        if (!file) return;
+        try {
+          if (file.size > 5 * 1024 * 1024) throw new Error("백업 파일은 5MB 이하만 복원할 수 있습니다.");
+          const backup = JSON.parse(await file.text());
+          if (!backup || backup.format !== "haru-record-backup" || backup.version !== 1 ||
+              !backup.logs || typeof backup.logs !== "object" || Array.isArray(backup.logs)) {
+            throw new Error("하루기록 백업 파일 형식이 아닙니다.");
+          }
+          const entries = Object.entries(backup.logs);
+          if (entries.some(([date, log]) => !isValidDateKey(date) || !log || typeof log !== "object" || Array.isArray(log))) {
+            throw new Error("백업에 잘못된 날짜 또는 기록이 포함되어 있습니다.");
+          }
+          if (!window.confirm(`${entries.length}개 기록을 복원합니다. 같은 날짜 기록과 같은 ID 템플릿은 백업 내용으로 바뀝니다. 계속할까요?`)) return;
+          const mergedLogs = getLogs();
+          entries.forEach(([date, log]) => { mergedLogs[date] = normalizeLog(log); });
+          localStorage.setItem(storeKey, JSON.stringify(mergedLogs));
+          if (Array.isArray(backup.templates)) {
+            const imported = backup.templates.filter((template) => template && typeof template.name === "string" &&
+              template.fields && typeof template.fields === "object").map((template) => ({
+              id: typeof template.id === "string" ? template.id : `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+              name: template.name,
+              fields: Object.fromEntries(fields.slice(1).map((field) => [
+                field, typeof template.fields[field] === "string" ? template.fields[field] : ""
+              ]))
+            }));
+            const mergedTemplates = new Map(getTemplates().map((template) => [template.id, template]));
+            imported.forEach((template) => mergedTemplates.set(template.id, template));
+            localStorage.setItem(templateStoreKey, JSON.stringify([...mergedTemplates.values()]));
+            renderTemplates();
+          }
+          const current = mergedLogs[dateInput.value];
+          if (current) renderLog(dateInput.value, current);
+          else renderEntries();
+          showToast(`${entries.length}개 기록을 복원했어요.`);
+        } catch (error) {
+          console.error("백업을 복원하지 못했습니다.", error);
+          showToast(error instanceof SyntaxError ? "백업 파일의 JSON 형식을 확인해 주세요." : error.message || "백업을 복원하지 못했어요.");
+        } finally {
+          backupFile.value = "";
+        }
+      });
+
+      renderTemplates();
       renderEntries();
       const existingToday = getLogs()[localDate];
       if (existingToday) renderLog(localDate, existingToday);

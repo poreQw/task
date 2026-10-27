@@ -29,7 +29,9 @@ jobs:
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./index.html
+          path: |
+            ./index.html
+            ./supabase/config.js
       - name: Deploy site
         id: deployment
         uses: actions/deploy-pages@v4

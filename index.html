@@ -30,6 +30,25 @@
     .brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 19px; letter-spacing: -.6px; }
     .brand-mark { width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; color: white; background: var(--purple); font-size: 19px; }
     .top-date { color: var(--muted); font-size: 13px; }
+    .account-tools { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 12px; }
+    .account-tools button { border: 0; border-radius: 8px; padding: 8px 11px; color: #555b6e; background: #f1f2f6; font-weight: 700; }
+    #accountStatus { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .auth-overlay { position: fixed; z-index: 20; inset: 0; display: grid; place-items: center; padding: 20px; background: #f6f7fb; }
+    .auth-overlay[hidden] { display: none; }
+    .auth-card { width: min(420px, 100%); padding: 28px; border: 1px solid var(--line); border-radius: 18px; background: #fff; box-shadow: 0 15px 50px #27264c12; }
+    .auth-card [hidden] { display: none !important; }
+    .auth-card h2 { margin: 0 0 8px; font-size: 22px; }
+    .auth-card p { color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .auth-card label { display: grid; gap: 7px; margin-top: 15px; color: #555b6e; font-size: 13px; font-weight: 700; }
+    .auth-card .auth-actions { display: flex; gap: 9px; margin-top: 20px; }
+    .auth-card .auth-actions .btn { flex: 1; }
+    .auth-mode-switch { margin: 15px 0 0 !important; text-align: center; }
+    .auth-password-wrap { display: flex; gap: 8px; }
+    .auth-password-wrap input { flex: 1; }
+    .auth-password-wrap button { padding: 0 12px; border: 1px solid var(--line); border-radius: 9px; color: #555b6e; background: #f7f7fa; font-size: 12px; }
+    .auth-switch { padding: 0; border: 0; color: var(--purple); background: transparent; font: inherit; font-weight: 700; }
+    .auth-message { min-height: 20px; color: var(--purple) !important; }
+    .auth-message.error { color: #c53b50 !important; }
     main { width: min(1120px, calc(100% - 40px)); margin: 42px auto 72px; }
     .intro { margin-bottom: 28px; }
     .eyebrow { color: var(--purple); font-size: 12px; font-weight: 800; letter-spacing: 1px; }
@@ -57,6 +76,8 @@
     .identity-fields .identity-label { display: flex; align-items: center; gap: 9px; }
     .identity-fields .identity-label input { flex: 1; }
     .identity-fields input[type="text"] { min-height: 0; padding: 10px 12px; font-size: 13px; }
+    .identity-fields .status-label { display: grid; align-items: start; gap: 7px; }
+    .status-input, #filterStatus { width: 100%; padding: 9px 10px; border: 1px solid var(--line); border-radius: 9px; background: #fff; color: var(--ink); }
     .question:not(:first-child) { display: flex; align-items: center; gap: 12px; }
     .question:not([data-step="0"]) textarea { min-height: 126px; padding: 20px; font-size: 18px; line-height: 1.6; text-align: left; resize: vertical; }
     .quick-notes { margin-bottom: 19px; padding: 16px; border: 1px solid var(--line); border-radius: 13px; background: #fbfbfe; }
@@ -94,6 +115,16 @@
     .entry-preview { overflow: hidden; max-width: 200px; margin-top: 4px; color: var(--muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
     .entry-delete { align-self: center; border: 0; color: #a0a4b1; background: transparent; font-size: 16px; }
     .entry-delete:hover { color: #d04b61; }
+    .status-badge { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 20px; background: #fff4dc; color: #98650b; font-size: 10px; font-weight: 700; white-space: nowrap; }
+    .status-badge.complete { background: #e7f6ef; color: #19866c; }
+    .recent-panel { margin-top: 22px; padding: 21px; }
+    .recent-table-wrap { overflow-x: auto; }
+    .recent-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .recent-table th, .recent-table td { padding: 12px 10px; border-bottom: 1px solid var(--line); font-size: 12px; }
+    .recent-table th { color: var(--muted); background: #f8f8fb; font-weight: 700; }
+    .recent-table tbody tr:last-child td { border-bottom: 0; }
+    .recent-task { display: block; overflow: hidden; max-width: 360px; color: var(--muted); text-overflow: ellipsis; white-space: nowrap; }
+    .recent-open { border: 0; padding: 0; color: var(--purple); background: transparent; font-size: 12px; font-weight: 700; }
     .dashboard-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .stat { padding: 12px 8px; border-radius: 11px; background: #f7f6ff; text-align: center; }
     .stat strong { display: block; color: var(--purple); font-size: 20px; }
@@ -145,6 +176,9 @@
     }
     @media (max-width: 760px) {
       .topbar { height: 62px; padding: 0 20px; }
+      .account-tools { gap: 6px; }
+      .account-tools .top-date { display: none; }
+      #accountStatus { max-width: 90px; }
       main { margin-top: 30px; width: min(100% - 28px, 560px); }
       .layout { grid-template-columns: 1fr; }
       .form-card { padding: 21px; }
@@ -317,32 +351,37 @@
 </head>
 <body>
   <div class="app-shell">
-    <nav class="side-nav" aria-label="主导航">
+    <nav class="side-nav" aria-label="주요 메뉴">
       <a class="nav-link active" href="#dashboardPanel">
-        <span class="nav-title"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M8 16v-3m4 3V8m4 8v-5"/></svg>整体状况</span>
-        <span class="nav-caption">仪表盘</span>
+        <span class="nav-title"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M8 16v-3m4 3V8m4 8v-5"/></svg>전체 현황</span>
+        <span class="nav-caption">대시보드</span>
       </a>
       <a class="nav-link" href="#logListPanel">
-        <span class="nav-title"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r=".8"/><circle cx="4.5" cy="12" r=".8"/><circle cx="4.5" cy="18" r=".8"/></svg>工作日志列表</span>
-        <span class="nav-caption">列表 / 列表</span>
+        <span class="nav-title"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r=".8"/><circle cx="4.5" cy="12" r=".8"/><circle cx="4.5" cy="18" r=".8"/></svg>업무일지 목록</span>
+        <span class="nav-caption">기록 목록</span>
       </a>
       <a class="nav-link" href="#writeLogPanel">
-        <span class="nav-title"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 5.5 18.5 10.5M4 20l4.2-.9L19 8.3a2.1 2.1 0 0 0-3-3L5.2 16.1 4 20Z"/><path d="M4 20h7"/></svg>写工作日志</span>
-        <span class="nav-caption">编辑 / 编辑</span>
+        <span class="nav-title"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 5.5 18.5 10.5M4 20l4.2-.9L19 8.3a2.1 2.1 0 0 0-3-3L5.2 16.1 4 20Z"/><path d="M4 20h7"/></svg>업무일지 작성</span>
+        <span class="nav-caption">새 기록 작성</span>
       </a>
       <a class="nav-link" href="#reportPanel">
-        <span class="nav-title"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h8l4 4v13H6z"/><path d="M14 3.5v4h4M9 12h6m-6 3h6"/><path d="M9 18h4"/></svg>详细和PDF输出</span>
-        <span class="nav-caption">报到</span>
+        <span class="nav-title"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h8l4 4v13H6z"/><path d="M14 3.5v4h4M9 12h6m-6 3h6"/><path d="M9 18h4"/></svg>상세 및 PDF 출력</span>
+        <span class="nav-caption">업무일지 보고서</span>
       </a>
       <a class="nav-link" href="#guidePanel">
-        <span class="nav-title"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7.2c-2-1.8-5-2.4-8-1.7v12c3.1-.7 6-.1 8 1.7m0-12c2-1.8 4.9-2.4 8-1.7v12c-3.1-.7-6-.1-8 1.7m0-12v12"/><path d="m18.5 2 .6 1.6 1.7.6-1.7.6-.6 1.7-.6-1.7-1.7-.6 1.7-.6z"/></svg>发展指南</span>
-        <span class="nav-caption">规格</span>
+        <span class="nav-title"><svg class="nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 7.2c-2-1.8-5-2.4-8-1.7v12c3.1-.7 6-.1 8 1.7m0-12c2-1.8 4.9-2.4 8-1.7v12c-3.1-.7-6-.1-8 1.7m0-12v12"/><path d="m18.5 2 .6 1.6 1.7.6-1.7.6-.6 1.7-.6-1.7-1.7-.6 1.7-.6z"/></svg>사용 안내</span>
+        <span class="nav-caption">도움말</span>
       </a>
     </nav>
     <div class="app-main">
       <header class="topbar">
         <div class="brand"><span class="brand-mark">하</span> 하루기록</div>
-        <div class="top-date" id="topDate"></div>
+        <div class="account-tools">
+          <span class="top-date" id="topDate"></span>
+          <span id="accountStatus">이 브라우저에 저장</span>
+          <button id="openAuthBtn" type="button" hidden>서버 로그인</button>
+          <button id="signOutBtn" type="button" hidden>로그아웃</button>
+        </div>
       </header>
       <main>
     <section class="intro">
@@ -365,10 +404,16 @@
             <div class="question active" data-step="0">
               <div class="identity-fields">
                 <label class="identity-label" for="employeeName">이름(姓名)
-                  <input id="employeeName" type="text" autocomplete="name" placeholder="이름을 입력하세요">
+                  <input id="employeeName" type="text" autocomplete="name" placeholder="이름을 입력하세요" required>
                 </label>
                 <label class="identity-label" for="logDate">날짜(日期)
-                  <input class="date-input" id="logDate" type="date" aria-label="업무일지 날짜">
+                  <input class="date-input" id="logDate" type="date" aria-label="업무일지 날짜" required>
+                </label>
+                <label class="identity-label status-label" for="logStatus">진행 상태
+                  <select class="status-input" id="logStatus">
+                    <option value="진행 중">진행 중</option>
+                    <option value="완료">완료</option>
+                  </select>
                 </label>
               </div>
             </div>
@@ -396,17 +441,19 @@
             <div class="step-actions">
               <div class="form-tools">
                 <button class="btn btn-secondary" id="polishBtn" type="button">업무일지 문장으로 다듬기</button>
+                <button class="btn btn-secondary" id="previewBtn" type="button">미리보기</button>
               </div>
               <button class="btn btn-primary" id="saveBtn" type="submit">업무일지 저장하기</button>
               <button class="btn btn-secondary" id="savePdfBtn" type="button">저장 후 PDF 다운로드</button>
             </div>
-            <p class="save-help">업무일지 항목에 입력한 내용은 날짜별로 자동 저장되며, 지난 업무일지 목록에서 다시 볼 수 있어요.</p>
+            <p class="save-help">로그인하지 않아도 사용하고 이 브라우저에 저장할 수 있어요. 다른 기기와 동기화하려면 로그인하세요.</p>
           </form>
         </div>
         <section class="card result" id="result">
           <div class="result-head">
             <div><h2>오늘의 업무일지</h2><div class="result-date" id="resultDate"></div></div>
             <div class="result-actions">
+              <button class="btn btn-secondary" id="editReportBtn" type="button">수정하기</button>
               <button class="btn btn-primary" id="shareBtn" type="button">공유하기</button>
               <button class="btn btn-secondary" id="copyBtn" type="button">복사</button>
               <button class="btn btn-secondary" id="downloadBtn" type="button">텍스트 저장</button>
@@ -422,6 +469,8 @@
           <h2 class="section-title">기록 통계</h2>
           <div class="dashboard-grid">
             <div class="stat"><strong id="statTotal">0</strong><span>전체 기록일</span></div>
+            <div class="stat"><strong id="statDone">0</strong><span>완료</span></div>
+            <div class="stat"><strong id="statProgress">0</strong><span>진행 중</span></div>
             <div class="stat"><strong id="statStreak">0</strong><span>연속 기록일</span></div>
             <div class="stat"><strong id="statWeek">0</strong><span>최근 7일</span></div>
           </div>
@@ -450,9 +499,15 @@
         <div class="card archive-card">
           <div class="archive-head"><h2>지난 업무일지</h2><span class="count" id="entryCount">0개</span></div>
           <div class="archive-tools">
+            <input id="filterName" type="search" placeholder="작성자 검색" aria-label="작성자 검색">
             <input id="searchLogs" type="search" placeholder="업무 내용 검색" aria-label="업무 내용 검색">
             <input id="filterFrom" type="date" aria-label="시작 날짜">
             <input id="filterTo" type="date" aria-label="종료 날짜">
+            <select id="filterStatus" aria-label="진행 상태 필터">
+              <option value="">모든 상태</option>
+              <option value="진행 중">진행 중</option>
+              <option value="완료">완료</option>
+            </select>
           </div>
           <div class="entry-list" id="entryList"></div>
           <div class="backup-tools" style="margin-top:12px">
@@ -463,28 +518,86 @@
         </div>
       </aside>
     </div>
+    <section class="card recent-panel">
+      <div class="archive-head"><h2>최근 업무일지</h2><button class="btn btn-primary" id="newLogBtn" type="button">+ 새 업무일지 작성</button></div>
+      <div class="recent-table-wrap">
+        <table class="recent-table">
+          <thead><tr><th>날짜</th><th>작성자</th><th>주요 업무</th><th>상태</th><th></th></tr></thead>
+          <tbody id="recentRows"></tbody>
+        </table>
+      </div>
+    </section>
     <section class="card guide-card" id="guideContent">
       <h2>업무일지 사용 가이드</h2>
-      <p>1. 날짜와 업무 내용을 입력하면 브라우저에 자동 저장됩니다. 항목을 여러 줄로 나누면 내일 할 일을 체크리스트로 사용할 수 있어요.</p>
-      <p>2. 지난 기록은 검색, 날짜 필터 또는 달력에서 찾아 열 수 있습니다. 템플릿을 저장해 반복 업무를 빠르게 작성하세요.</p>
-      <p>3. 전체 백업은 기록과 템플릿을 JSON 파일로 내려받습니다. 다른 브라우저에서 복원하려면 해당 파일을 선택하세요.</p>
-      <p>4. 데이터는 이 브라우저에만 저장되며 서버로 전송되지 않습니다. 브라우저 데이터를 지우기 전에 백업 파일을 보관하세요.</p>
+      <p>1. 업무일지를 작성하고 진행 상태를 선택하세요. 이름과 날짜를 입력하면 저장할 수 있으며, 작성 중인 내용은 자동 저장됩니다.</p>
+      <p>2. 대시보드에서 전체·완료·진행 중 기록과 최근 기록을 확인하세요. 목록에서 작성자·업무 내용·날짜·상태로 검색하고 기록을 열거나 삭제할 수 있습니다.</p>
+      <p>3. 보고서 화면에서 내용을 확인·수정하고 PDF로 저장하거나 공유할 수 있습니다. 날짜별 기록은 기존 내용을 수정하는 방식으로 관리됩니다.</p>
+      <p>4. 로그인 없이 이 브라우저에 저장하거나 로그인해 계정의 Supabase에 동기화할 수 있습니다. 기록과 템플릿은 전체 백업으로 보관하세요.</p>
     </section>
       </main>
     </div>
   </div>
   <div class="toast" id="toast" role="status"></div>
+  <section class="auth-overlay" id="authOverlay" hidden aria-labelledby="authTitle">
+    <form class="auth-card" id="authForm">
+      <div class="brand"><span class="brand-mark">하</span> 하루기록</div>
+      <h2 id="authTitle">로그인</h2>
+      <p id="authDescription">계정에 로그인하면 내 업무일지를 안전하게 저장하고 다른 기기에서도 확인할 수 있습니다.</p>
+      <label for="authEmail">이메일<input id="authEmail" type="email" autocomplete="email" required></label>
+      <label for="authPassword">비밀번호
+        <span class="auth-password-wrap">
+          <input id="authPassword" type="password" autocomplete="current-password" minlength="6" required>
+          <button id="togglePasswordBtn" type="button" aria-label="비밀번호 표시">표시</button>
+        </span>
+      </label>
+      <label id="confirmPasswordField" for="confirmPassword" hidden>비밀번호 확인
+        <input id="confirmPassword" type="password" autocomplete="new-password" minlength="6">
+      </label>
+      <div class="auth-actions">
+        <button class="btn btn-primary" id="authSubmitBtn" type="submit">로그인</button>
+        <button class="btn btn-secondary" id="closeAuthBtn" type="button">나중에</button>
+      </div>
+      <p class="auth-mode-switch"><button class="auth-switch" id="authModeBtn" type="button">처음 방문하셨나요? 회원가입</button></p>
+      <p class="auth-message" id="authMessage" role="status" aria-live="polite"></p>
+      <p class="auth-mail-help" id="authMailHelp" hidden>Supabase 대시보드에서 Authentication → Sign In / Providers → Email → Confirm email을 꺼 주세요. 이미 만들어진 계정은 설정을 끄는 것만으로 인증 상태가 바뀌지 않을 수 있습니다. Authentication → Users에서 기존 사용자를 확인하거나 관리자가 이메일을 확인 처리해 주세요. 계정을 삭제하면 연결된 업무일지도 함께 삭제될 수 있으니 삭제 전에 확인하세요.</p>
+    </form>
+  </section>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase/config.js"></script>
   <script>
     (() => {
       const fields = ["employeeName", "assigned", "completed", "unresolved", "learned", "next"];
       const form = document.getElementById("logForm");
       const dateInput = document.getElementById("logDate");
+      const statusInput = document.getElementById("logStatus");
       const result = document.getElementById("result");
       const storeKey = "haru-record-work-logs";
       const templateStoreKey = "haru-record-templates";
+      const supabaseConfig = window.HARU_SUPABASE_CONFIG || {};
+      const supabaseConfigured = Boolean(supabaseConfig.url && supabaseConfig.anonKey);
+      const supabaseConfigStarted = Boolean(supabaseConfig.url || supabaseConfig.anonKey);
+      let supabaseClient = null;
+      let supabaseInitError = "";
+      if (supabaseConfigured) {
+        try {
+          const projectUrl = new URL(supabaseConfig.url);
+          if (!["https:", "http:"].includes(projectUrl.protocol)) throw new Error("Supabase URL must use HTTP or HTTPS.");
+          if (!window.supabase) throw new Error("Supabase library did not load.");
+          supabaseClient = window.supabase.createClient(supabaseConfig.url, supabaseConfig.anonKey);
+        } catch (error) {
+          supabaseInitError = error.message;
+          console.error("Supabase를 초기화하지 못했습니다.", error);
+        }
+      }
+      const authOverlay = document.getElementById("authOverlay");
       const taskList = document.getElementById("taskList");
       const today = new Date();
       let currentTasks = [];
+      let logsCache = {};
+      let currentUser = null;
+      let previewLogData = null;
+      let saveInProgress = false;
+      const draftSaveTimers = new Map();
       let calendarMonth = new Date(today.getFullYear(), today.getMonth(), 1);
       let selectedDate = "";
       let toastTimer;
@@ -495,6 +608,7 @@
       }).format(today);
 
       function getLogs() {
+        if (supabaseClient && currentUser) return logsCache;
         try {
           const logs = JSON.parse(localStorage.getItem(storeKey) || "{}");
           if (!logs || typeof logs !== "object" || Array.isArray(logs)) return {};
@@ -508,6 +622,54 @@
         }
       }
 
+      async function persistLog(date, log) {
+          const normalized = normalizeLog(log);
+          if (supabaseClient && currentUser) {
+            const { error } = await supabaseClient.from("daily_logs").upsert({
+              user_id: currentUser.id,
+              log_date: date,
+              content: normalized
+            }, { onConflict: "user_id,log_date" });
+            if (error) throw error;
+            logsCache[date] = normalized;
+            return;
+          }
+          const logs = getLogs();
+          logs[date] = normalized;
+          localStorage.setItem(storeKey, JSON.stringify(logs));
+        }
+
+      async function persistLogs(entries) {
+          if (supabaseClient && currentUser) {
+            const rows = entries.map(([date, log]) => ({
+              user_id: currentUser.id, log_date: date, content: normalizeLog(log)
+            }));
+            for (let offset = 0; offset < rows.length; offset += 250) {
+              const { error } = await supabaseClient.from("daily_logs")
+                .upsert(rows.slice(offset, offset + 250), { onConflict: "user_id,log_date" });
+              if (error) throw error;
+            }
+            entries.forEach(([date, log]) => { logsCache[date] = normalizeLog(log); });
+            return;
+          }
+          const logs = getLogs();
+          entries.forEach(([date, log]) => { logs[date] = normalizeLog(log); });
+          localStorage.setItem(storeKey, JSON.stringify(logs));
+        }
+
+      async function deletePersistedLog(date) {
+          if (supabaseClient && currentUser) {
+            const { error } = await supabaseClient.from("daily_logs")
+              .delete().eq("user_id", currentUser.id).eq("log_date", date);
+            if (error) throw error;
+            delete logsCache[date];
+            return;
+          }
+          const logs = getLogs();
+          delete logs[date];
+          localStorage.setItem(storeKey, JSON.stringify(logs));
+      }
+
       function normalizeLog(log) {
         const entry = log && typeof log === "object" && !Array.isArray(log) ? log : {};
         const oldCompleted = [entry.work, entry.achievement].filter((value) => typeof value === "string" && value.trim());
@@ -519,6 +681,9 @@
           learned: typeof entry.learned === "string" ? entry.learned : "",
           next: typeof entry.next === "string" ? entry.next : ""
         };
+        normalized.status = entry.status === "완료" || entry.status === "진행 중"
+          ? entry.status
+          : normalized.completed.trim() && !normalized.unresolved.trim() && !normalized.next.trim() ? "완료" : "진행 중";
         normalized.tasks = Array.isArray(entry.tasks)
           ? entry.tasks.filter((task) => task && typeof task.text === "string" && task.text.trim())
             .map((task) => ({ text: task.text.trim(), done: task.done === true }))
@@ -552,7 +717,7 @@
         ];
         return [
           "일일 업무일지",
-          `이름(姓名): ${log.employeeName || "미입력"}    날짜(日期): ${reportDate}`,
+          `이름(姓名): ${log.employeeName || "미입력"}    날짜(日期): ${reportDate}    상태: ${log.status}`,
           "━━━━━━━━━━━━━━━━━━━━",
           ...sections.flatMap(([title, value]) => [title, value.trim() || "기록 없음", ""])
         ].join("\n");
@@ -587,15 +752,16 @@
           } else {
             context.fillStyle = "#666b7d";
             context.font = "16px sans-serif";
-          context.fillText(`이름(姓名): ${log.employeeName || "미입력"}`, margin, 126);
-          context.fillText(`날짜(日期): ${date.replaceAll("-", ".")}`, margin, 153);
+            context.fillText(`이름(姓名): ${log.employeeName || "미입력"}`, margin, 126, 250);
+            context.fillText(`날짜(日期): ${date.replaceAll("-", ".")}`, margin + 280, 126, 150);
+            context.fillText(`상태: ${log.status}`, margin + 500, 126, 150);
             context.strokeStyle = "#dedfe8";
             context.lineWidth = 1;
             context.beginPath();
-          context.moveTo(margin, 174);
-          context.lineTo(pageWidth - margin, 174);
+            context.moveTo(margin, 153);
+            context.lineTo(pageWidth - margin, 153);
             context.stroke();
-          y = 205;
+            y = 184;
           }
           pages.push(canvas);
         }
@@ -726,7 +892,7 @@
           return;
         }
         try {
-          const pdf = createPdfBlob(selectedDate, getLogs()[selectedDate]);
+          const pdf = createPdfBlob(selectedDate, previewLogData || getLogs()[selectedDate]);
           const url = URL.createObjectURL(pdf);
           const link = document.createElement("a");
           link.href = url;
@@ -841,8 +1007,11 @@
       }
 
       function renderDashboard() {
-        const dates = Object.keys(getLogs()).sort();
+        const logs = getLogs();
+        const dates = Object.keys(logs).sort();
         document.getElementById("statTotal").textContent = String(dates.length);
+        document.getElementById("statDone").textContent = String(dates.filter((date) => logs[date].status === "완료").length);
+        document.getElementById("statProgress").textContent = String(dates.filter((date) => logs[date].status !== "완료").length);
         const dateSet = new Set(dates);
         const dayOffset = dateSet.has(localDate) ? 0 : 1;
         let cursor = new Date(`${localDate}T00:00:00`);
@@ -857,6 +1026,51 @@
         weekStart.setDate(weekStart.getDate() - 6);
         const weekStartDate = dateKey(weekStart);
         document.getElementById("statWeek").textContent = String(dates.filter((date) => date >= weekStartDate && date <= localDate).length);
+        const rows = document.getElementById("recentRows");
+        rows.replaceChildren();
+        const recentDates = dates.slice().sort((a, b) => b.localeCompare(a)).slice(0, 4);
+        if (!recentDates.length) {
+          const row = document.createElement("tr");
+          const empty = document.createElement("td");
+          empty.colSpan = 5;
+          empty.className = "empty";
+          empty.textContent = "아직 업무일지가 없어요. 새 업무일지를 작성해 보세요.";
+          row.append(empty);
+          rows.append(row);
+          return;
+        }
+        recentDates.forEach((date) => {
+          const log = logs[date];
+          const row = document.createElement("tr");
+          const dateCell = document.createElement("td");
+          dateCell.textContent = new Intl.DateTimeFormat("ko-KR", {
+            year: "numeric", month: "long", day: "numeric"
+          }).format(new Date(`${date}T00:00:00`));
+          const nameCell = document.createElement("td");
+          nameCell.textContent = log.employeeName || "이름 미입력";
+          const taskCell = document.createElement("td");
+          const taskPreview = document.createElement("span");
+          taskPreview.className = "recent-task";
+          taskPreview.textContent = log.assigned || log.completed || "업무 내용 없음";
+          taskCell.append(taskPreview);
+          const statusCell = document.createElement("td");
+          const status = document.createElement("span");
+          status.className = `status-badge${log.status === "완료" ? " complete" : ""}`;
+          status.textContent = log.status;
+          statusCell.append(status);
+          const actionCell = document.createElement("td");
+          const openButton = document.createElement("button");
+          openButton.type = "button";
+          openButton.className = "recent-open";
+          openButton.textContent = "보기";
+          openButton.addEventListener("click", () => {
+            renderLog(date, log);
+            showView("reportPanel");
+          });
+          actionCell.append(openButton);
+          row.append(dateCell, nameCell, taskCell, statusCell, actionCell);
+          rows.append(row);
+        });
       }
 
       function renderCalendar() {
@@ -935,9 +1149,11 @@
 
       function renderLog(date, log) {
         selectedDate = date;
+        previewLogData = null;
         dateInput.value = date;
         const normalized = normalizeLog(log);
         currentTasks = normalized.tasks;
+        statusInput.value = normalized.status;
         document.getElementById("quickNotes").value = "";
         fields.forEach((field) => {
           const input = document.getElementById(field);
@@ -953,16 +1169,73 @@
         renderEntries();
       }
 
+      function getFormLog() {
+        return {
+          ...Object.fromEntries(fields.map((field) => [field, document.getElementById(field).value.trim()])),
+          status: statusInput.value
+        };
+      }
+
+      function previewLog() {
+        const date = dateInput.value;
+        if (!document.getElementById("employeeName").value.trim()) {
+          showToast("이름을 입력해 주세요.");
+          document.getElementById("employeeName").focus();
+          return;
+        }
+        if (!date) {
+          showToast("날짜를 선택해 주세요.");
+          dateInput.focus();
+          return;
+        }
+        syncTasksFromText();
+        const log = { ...getFormLog(), tasks: currentTasks };
+        selectedDate = date;
+        previewLogData = log;
+        document.getElementById("resultDate").textContent = new Intl.DateTimeFormat("ko-KR", {
+          year: "numeric", month: "long", day: "numeric"
+        }).format(new Date(`${date}T00:00:00`));
+        document.getElementById("resultBody").textContent = makeReport(date, log);
+        result.classList.add("show");
+        showView("reportPanel");
+        showToast("현재 입력 내용의 미리보기입니다.");
+      }
+
+      function startNewLog() {
+        const existing = getLogs()[localDate];
+        if (existing) {
+          renderLog(localDate, existing);
+          showView("writeLogPanel");
+          showToast("오늘의 업무일지가 이미 있어 기존 기록을 수정할 수 있어요.");
+          return;
+        }
+        form.reset();
+        dateInput.value = localDate;
+        statusInput.value = "진행 중";
+        selectedDate = "";
+        previewLogData = null;
+        currentTasks = [];
+        document.getElementById("quickNotes").value = "";
+        result.classList.remove("show");
+        renderTaskList();
+        renderEntries();
+        showView("writeLogPanel");
+      }
+
       function renderEntries() {
         const logs = getLogs();
+        const nameQuery = document.getElementById("filterName").value.trim().toLocaleLowerCase();
         const query = document.getElementById("searchLogs").value.trim().toLocaleLowerCase();
         const from = document.getElementById("filterFrom").value;
         const to = document.getElementById("filterTo").value;
+        const statusFilter = document.getElementById("filterStatus").value;
         const allDates = Object.keys(logs).sort((a, b) => b.localeCompare(a));
         const dates = allDates.filter((date) => {
           const log = logs[date];
           const searchable = fields.map((field) => log[field]).join("\n").toLocaleLowerCase();
-          return (!query || searchable.includes(query)) && (!from || date >= from) && (!to || date <= to);
+          return (!nameQuery || log.employeeName.toLocaleLowerCase().includes(nameQuery)) &&
+            (!query || searchable.includes(query)) && (!from || date >= from) && (!to || date <= to) &&
+            (!statusFilter || log.status === statusFilter);
         });
         const list = document.getElementById("entryList");
         document.getElementById("entryCount").textContent = `${dates.length}/${allDates.length}개`;
@@ -986,22 +1259,26 @@
             .format(new Date(`${date}T00:00:00`));
           const preview = document.createElement("div");
           preview.className = "entry-preview";
-          preview.textContent = logs[date].assigned || logs[date].completed || "업무일지";
+          preview.textContent = `${logs[date].employeeName || "이름 미입력"} · ${logs[date].assigned || logs[date].completed || "업무일지"}`;
           text.append(dateLabel, preview);
+          const status = document.createElement("span");
+          status.className = `status-badge${logs[date].status === "완료" ? " complete" : ""}`;
+          status.textContent = logs[date].status;
           const remove = document.createElement("button");
           remove.className = "entry-delete";
           remove.type = "button";
           remove.setAttribute("aria-label", `${date} 업무일지 삭제`);
           remove.textContent = "×";
-          remove.addEventListener("click", (event) => {
+          remove.addEventListener("click", async (event) => {
             event.stopPropagation();
             if (!window.confirm("이 업무일지를 삭제할까요?")) return;
-            const updated = getLogs();
-            delete updated[date];
+            clearTimeout(draftSaveTimers.get(date));
+            draftSaveTimers.delete(date);
             try {
-              localStorage.setItem(storeKey, JSON.stringify(updated));
+              await deletePersistedLog(date);
               if (selectedDate === date) {
                 selectedDate = "";
+                previewLogData = null;
                 result.classList.remove("show");
                 form.reset();
                 dateInput.value = date;
@@ -1010,14 +1287,14 @@
               showToast("업무일지를 삭제했어요.");
             } catch (error) {
               console.error("업무일지를 삭제하지 못했습니다.", error);
-              showToast("삭제하지 못했어요. 브라우저 저장 공간을 확인해 주세요.");
+              showToast("삭제하지 못했어요. 로그인과 저장소 연결을 확인해 주세요.");
             }
           });
           item.addEventListener("click", () => {
             renderLog(date, logs[date]);
             showView("reportPanel");
           });
-          item.append(text, remove);
+          item.append(text, status, remove);
           list.append(item);
         });
         renderDashboard();
@@ -1031,10 +1308,12 @@
         if (existing) renderLog(date, existing);
         else {
           selectedDate = "";
+          previewLogData = null;
           currentTasks = [];
           result.classList.remove("show");
           document.getElementById("quickNotes").value = "";
           fields.slice(1).forEach((field) => { document.getElementById(field).value = ""; });
+          statusInput.value = "진행 중";
           dateInput.value = date;
           renderTaskList();
           renderEntries();
@@ -1045,6 +1324,7 @@
         document.getElementById(field).addEventListener("input", (event) => resizeEntry(event.currentTarget));
       });
       fields.forEach((field) => document.getElementById(field).addEventListener("input", () => saveDraft()));
+      statusInput.addEventListener("change", () => saveDraft());
 
       document.getElementById("organizeNotesBtn").addEventListener("click", organizeNotes);
       document.getElementById("polishBtn").addEventListener("click", () => {
@@ -1060,29 +1340,46 @@
         showToast(changed ? `${changed}개 항목을 업무일지 문장으로 다듬었어요.` : "다듬을 문장이 없거나 이미 문장 형식이에요.");
       });
 
-      function saveLog(openPdfAfterSave = false) {
-        const log = Object.fromEntries(fields.map((field) => [field, document.getElementById(field).value.trim()]));
+      async function saveLog(openPdfAfterSave = false) {
         const date = dateInput.value;
+        if (saveInProgress) {
+          showToast("업무일지를 저장하고 있어요. 잠시만 기다려 주세요.");
+          return false;
+        }
+        if (!document.getElementById("employeeName").value.trim()) {
+          showToast("이름을 입력해 주세요.");
+          document.getElementById("employeeName").focus();
+          return false;
+        }
         if (!date) {
           showToast("날짜를 선택해 주세요.");
           dateInput.focus();
           return false;
         }
+        const log = getFormLog();
         syncTasksFromText();
         log.tasks = currentTasks;
-        const logs = getLogs();
-        logs[date] = log;
+        saveInProgress = true;
+        const saveButtons = [document.getElementById("saveBtn"), document.getElementById("savePdfBtn")];
+        saveButtons.forEach((button) => { button.disabled = true; });
         try {
-          localStorage.setItem(storeKey, JSON.stringify(logs));
+          clearTimeout(draftSaveTimers.get(date));
+          draftSaveTimers.delete(date);
+          await persistLog(date, log);
           renderLog(date, log);
           showView("reportPanel");
-          showToast("업무일지를 저장했어요.");
+          showToast(currentUser
+            ? "업무일지를 서버에 저장했어요."
+            : "업무일지를 이 브라우저에 저장했어요. 서버 저장은 로그인해 주세요.");
           if (openPdfAfterSave) downloadPdf();
           return true;
         } catch (error) {
           console.error("업무일지를 저장하지 못했습니다.", error);
-          showToast("저장하지 못했어요. 브라우저 저장 공간을 확인해 주세요.");
+          showToast("저장하지 못했어요. 저장 공간이나 연결을 확인해 주세요.");
           return false;
+        } finally {
+          saveInProgress = false;
+          saveButtons.forEach((button) => { button.disabled = false; });
         }
       }
 
@@ -1090,20 +1387,36 @@
         const date = dateInput.value;
         if (!date) return;
         if (updateTasks) syncTasksFromText();
-        const log = Object.fromEntries(fields.map((field) => [field, document.getElementById(field).value.trim()]));
+        const log = getFormLog();
         log.tasks = currentTasks;
-        const logs = getLogs();
-        logs[date] = log;
-        try {
-          localStorage.setItem(storeKey, JSON.stringify(logs));
-          if (selectedDate === date && result.classList.contains("show")) {
-            document.getElementById("resultBody").textContent = makeReport(date, log);
+        previewLogData = null;
+        if (!supabaseClient || !currentUser) {
+          const logs = getLogs();
+          logs[date] = log;
+          try {
+            localStorage.setItem(storeKey, JSON.stringify(logs));
+          } catch (error) {
+            console.error("업무일지를 자동 저장하지 못했습니다.", error);
+            showToast("자동 저장하지 못했어요. 브라우저 저장 공간을 확인해 주세요.");
           }
-          renderEntries();
-        } catch (error) {
-          console.error("업무일지를 자동 저장하지 못했습니다.", error);
-          showToast("자동 저장하지 못했어요. 브라우저 저장 공간을 확인해 주세요.");
+        } else {
+          logsCache[date] = log;
+          clearTimeout(draftSaveTimers.get(date));
+          const timer = setTimeout(async () => {
+            draftSaveTimers.delete(date);
+            try {
+              await persistLog(date, log);
+            } catch (error) {
+              console.error("업무일지 초안을 클라우드에 저장하지 못했습니다.", error);
+              showToast("초안을 저장하지 못했어요. 인터넷 연결을 확인해 주세요.");
+            }
+          }, 600);
+          draftSaveTimers.set(date, timer);
         }
+        if (selectedDate === date && result.classList.contains("show")) {
+          document.getElementById("resultBody").textContent = makeReport(date, log);
+        }
+        renderEntries();
       }
 
       form.addEventListener("submit", (event) => {
@@ -1111,6 +1424,9 @@
         saveLog();
       });
       document.getElementById("savePdfBtn").addEventListener("click", () => saveLog(true));
+      document.getElementById("previewBtn").addEventListener("click", previewLog);
+      document.getElementById("editReportBtn").addEventListener("click", () => showView("writeLogPanel"));
+      document.getElementById("newLogBtn").addEventListener("click", startNewLog);
 
       document.getElementById("copyBtn").addEventListener("click", async () => {
         try {
@@ -1163,10 +1479,11 @@
       const [dashboardStats, calendar, templates, logList] = sidebar.querySelectorAll(":scope > .archive-card");
       const intro = main.querySelector(".intro");
       const formCard = layout.querySelector(".form-card");
+      const recentPanel = main.querySelector(".recent-panel");
       const guide = document.getElementById("guideContent");
       const views = new Map();
       [
-        ["dashboardPanel", [intro, dashboardStats, calendar]],
+        ["dashboardPanel", [intro, dashboardStats, calendar, recentPanel]],
         ["logListPanel", [logList]],
         ["writeLogPanel", [formCard, templates]],
         ["reportPanel", [result]],
@@ -1206,9 +1523,11 @@
         });
       });
 
+      document.getElementById("filterName").addEventListener("input", renderEntries);
       document.getElementById("searchLogs").addEventListener("input", renderEntries);
       document.getElementById("filterFrom").addEventListener("change", renderEntries);
       document.getElementById("filterTo").addEventListener("change", renderEntries);
+      document.getElementById("filterStatus").addEventListener("change", renderEntries);
       document.getElementById("calendarPrev").addEventListener("click", () => {
         calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1);
         renderCalendar();
@@ -1289,9 +1608,8 @@
             throw new Error("백업에 잘못된 날짜 또는 기록이 포함되어 있습니다.");
           }
           if (!window.confirm(`${entries.length}개 기록을 복원합니다. 같은 날짜 기록과 같은 ID 템플릿은 백업 내용으로 바뀝니다. 계속할까요?`)) return;
-          const mergedLogs = getLogs();
-          entries.forEach(([date, log]) => { mergedLogs[date] = normalizeLog(log); });
-          localStorage.setItem(storeKey, JSON.stringify(mergedLogs));
+          const normalizedEntries = entries.map(([date, log]) => [date, normalizeLog(log)]);
+          await persistLogs(normalizedEntries);
           if (Array.isArray(backup.templates)) {
             const imported = backup.templates.filter((template) => template && typeof template.name === "string" &&
               template.fields && typeof template.fields === "object").map((template) => ({
@@ -1306,7 +1624,7 @@
             localStorage.setItem(templateStoreKey, JSON.stringify([...mergedTemplates.values()]));
             renderTemplates();
           }
-          const current = mergedLogs[dateInput.value];
+          const current = getLogs()[dateInput.value];
           if (current) renderLog(dateInput.value, current);
           else renderEntries();
           showToast(`${entries.length}개 기록을 복원했어요.`);
@@ -1318,10 +1636,256 @@
         }
       });
 
+      const authForm = document.getElementById("authForm");
+      const authMessage = document.getElementById("authMessage");
+      const accountStatus = document.getElementById("accountStatus");
+      const signOutBtn = document.getElementById("signOutBtn");
+      const openAuthBtn = document.getElementById("openAuthBtn");
+      const authSubmitBtn = document.getElementById("authSubmitBtn");
+      const authModeBtn = document.getElementById("authModeBtn");
+      const passwordInput = document.getElementById("authPassword");
+      const confirmPasswordInput = document.getElementById("confirmPassword");
+      const confirmPasswordField = document.getElementById("confirmPasswordField");
+      const authMailHelp = document.getElementById("authMailHelp");
+      let authMode = "login";
+      const setAuthMessage = (message, isError = false) => {
+        authMessage.textContent = message;
+        authMessage.classList.toggle("error", isError);
+      };
+      function setAuthMode(mode) {
+        authMode = mode;
+        const isSignUp = mode === "signup";
+        document.getElementById("authTitle").textContent = isSignUp ? "계정 만들기" : "로그인";
+        document.getElementById("authDescription").textContent = isSignUp
+          ? "이메일과 비밀번호를 등록하면 바로 계정을 사용할 수 있습니다."
+          : "계정에 로그인하면 내 업무일지를 안전하게 저장하고 다른 기기에서도 확인할 수 있습니다.";
+        authSubmitBtn.textContent = isSignUp ? "가입하기" : "로그인";
+        authModeBtn.textContent = isSignUp ? "이미 계정이 있어요" : "처음 방문하셨나요? 회원가입";
+        confirmPasswordField.hidden = !isSignUp;
+        confirmPasswordInput.required = isSignUp;
+        authMailHelp.hidden = true;
+        passwordInput.autocomplete = isSignUp ? "new-password" : "current-password";
+        confirmPasswordInput.value = "";
+        setAuthMessage("");
+      }
+      authModeBtn.addEventListener("click", () => {
+        setAuthMode(authMode === "login" ? "signup" : "login");
+        passwordInput.focus();
+      });
+      document.getElementById("togglePasswordBtn").addEventListener("click", (event) => {
+        const button = event.currentTarget;
+        const reveal = passwordInput.type === "password";
+        passwordInput.type = reveal ? "text" : "password";
+        button.textContent = reveal ? "숨기기" : "표시";
+        button.setAttribute("aria-label", reveal ? "비밀번호 숨기기" : "비밀번호 표시");
+      });
+      openAuthBtn.hidden = !supabaseConfigStarted;
+      openAuthBtn.addEventListener("click", () => {
+        setAuthMode("login");
+        setAuthMessage(supabaseClient
+          ? "로그인하면 업무일지를 계정에 연결해 서버에 저장합니다. 로그인 전에도 앱을 계속 사용할 수 있습니다."
+          : supabaseInitError || "Supabase 설정을 확인해 주세요.");
+        authOverlay.hidden = false;
+        document.getElementById("authEmail").focus();
+      });
+      document.getElementById("closeAuthBtn").addEventListener("click", () => {
+        authOverlay.hidden = true;
+      });
+      async function loadCloudLogs(user) {
+        const loaded = {};
+        for (let offset = 0; ; offset += 1000) {
+          const { data, error } = await supabaseClient.from("daily_logs")
+            .select("log_date,content").eq("user_id", user.id)
+            .order("log_date", { ascending: false }).range(offset, offset + 999);
+          if (error) throw error;
+          data.forEach((row) => {
+            if (isValidDateKey(row.log_date)) loaded[row.log_date] = normalizeLog(row.content);
+          });
+          if (data.length < 1000) break;
+        }
+        logsCache = loaded;
+        renderEntries();
+        const current = loaded[dateInput.value];
+        if (current) renderLog(dateInput.value, current);
+        else {
+          selectedDate = "";
+          result.classList.remove("show");
+          renderEntries();
+        }
+      }
+
+      async function applyAuthSession(session) {
+        const user = session && session.user;
+        if (!user) {
+          const wasSignedIn = Boolean(currentUser);
+          draftSaveTimers.forEach((timer) => clearTimeout(timer));
+          draftSaveTimers.clear();
+          currentUser = null;
+          logsCache = {};
+          if (wasSignedIn) {
+            selectedDate = "";
+            form.reset();
+            dateInput.value = localDate;
+            currentTasks = [];
+            result.classList.remove("show");
+            renderTaskList();
+          }
+          authOverlay.hidden = true;
+          signOutBtn.hidden = true;
+          accountStatus.textContent = supabaseClient
+            ? "이 브라우저에 저장 · 로그인 시 서버 저장"
+            : "이 브라우저에 저장";
+          renderEntries();
+          return;
+        }
+        if (currentUser && currentUser.id === user.id) return;
+        currentUser = user;
+        form.reset();
+        dateInput.value = localDate;
+        currentTasks = [];
+        selectedDate = "";
+        result.classList.remove("show");
+        renderTaskList();
+        accountStatus.textContent = user.email || "로그인됨";
+        signOutBtn.hidden = false;
+        setAuthMessage("저장된 업무일지를 불러오는 중...");
+        try {
+          await loadCloudLogs(user);
+          authOverlay.hidden = true;
+          authMessage.textContent = "";
+        } catch (error) {
+          console.error("클라우드 업무일지를 불러오지 못했습니다.", error);
+          currentUser = null;
+          logsCache = {};
+          signOutBtn.hidden = true;
+          accountStatus.textContent = "이 브라우저에 저장 · 서버 연결 오류";
+          authOverlay.hidden = true;
+          renderEntries();
+          setAuthMessage("기록을 불러오지 못했습니다. Supabase SQL 설정과 네트워크를 확인해 주세요.");
+        }
+      }
+
+      authForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!supabaseClient) return;
+        const email = document.getElementById("authEmail").value.trim();
+        const password = passwordInput.value;
+        if (authMode === "signup" && password !== confirmPasswordInput.value) {
+          setAuthMessage("비밀번호가 서로 일치하지 않습니다.", true);
+          confirmPasswordInput.focus();
+          return;
+        }
+        authForm.querySelectorAll("input, button").forEach((control) => { control.disabled = true; });
+        setAuthMessage(authMode === "signup" ? "계정을 만들고 있습니다..." : "로그인 중...");
+        try {
+          if (authMode === "signup") {
+            const { data, error } = await supabaseClient.auth.signUp({ email, password });
+            if (error) throw error;
+            if (data.session) {
+              setAuthMessage("가입이 완료되었습니다. 로그인 상태로 전환합니다.");
+            } else if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+              setAuthMode("login");
+              document.getElementById("authEmail").value = email;
+              setAuthMessage("이미 가입된 이메일입니다. 이 계정으로 로그인해 주세요.", true);
+            } else {
+              setAuthMessage("계정은 생성됐지만 아직 로그인할 수 없습니다. Supabase 이메일 인증 설정과 기존 계정 상태를 확인해 주세요.", true);
+              authMailHelp.hidden = false;
+            }
+          } else {
+            const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) throw error;
+            setAuthMessage("로그인되었습니다.");
+          }
+        } catch (error) {
+          console.error(authMode === "signup" ? "계정을 만들지 못했습니다." : "로그인하지 못했습니다.", error);
+          const message = (error.message || "").toLowerCase();
+          const errorCode = (error.code || "").toLowerCase();
+          if (errorCode === "email_not_confirmed" || message.includes("email not confirmed") || message.includes("email is not confirmed")) {
+            setAuthMessage("계정은 있지만 이메일 인증이 완료되지 않아 로그인할 수 없습니다.", true);
+            authMailHelp.hidden = false;
+          } else if (errorCode === "invalid_credentials" || message.includes("invalid login credentials")) {
+            setAuthMessage("이메일 또는 비밀번호가 올바르지 않습니다. 가입한 주소와 비밀번호를 확인해 주세요.", true);
+          } else if (errorCode === "user_not_found" || message.includes("user not found")) {
+            setAuthMessage("가입된 계정을 찾지 못했습니다. 이메일 주소를 확인하거나 다시 가입해 주세요.", true);
+          } else if (errorCode === "over_email_send_rate_limit" || message.includes("rate limit") || message.includes("too many requests")) {
+            setAuthMessage("요청 횟수가 너무 많습니다. 잠시 기다린 뒤 다시 시도해 주세요.", true);
+          } else if (message.includes("already registered") || message.includes("already been registered")) {
+            setAuthMessage("이미 가입된 이메일입니다. 로그인해 주세요.", true);
+          } else if (message.includes("password") && (message.includes("short") || message.includes("least"))) {
+            setAuthMessage("비밀번호가 너무 짧습니다. 6자 이상 입력해 주세요.", true);
+          } else if (message.includes("invalid") && message.includes("email")) {
+            setAuthMessage("이메일 주소를 확인해 주세요.", true);
+          } else if (authMode === "signup") {
+            setAuthMessage("가입하지 못했습니다. 입력한 정보를 확인하고 다시 시도해 주세요.", true);
+          } else {
+            setAuthMessage("로그인하지 못했습니다. 이메일과 비밀번호를 확인해 주세요.", true);
+          }
+        } finally {
+          authForm.querySelectorAll("input, button").forEach((control) => { control.disabled = false; });
+        }
+      });
+
+      signOutBtn.addEventListener("click", async () => {
+        if (!supabaseClient) return;
+        signOutBtn.disabled = true;
+        try {
+          for (const [date, timer] of draftSaveTimers) {
+            clearTimeout(timer);
+            draftSaveTimers.delete(date);
+            await persistLog(date, logsCache[date]);
+          }
+          const { error } = await supabaseClient.auth.signOut();
+          if (error) throw error;
+          await applyAuthSession(null);
+          setAuthMessage("로그아웃했습니다.");
+        } catch (error) {
+          console.error("로그아웃하지 못했습니다.", error);
+          showToast("초안 저장 또는 로그아웃에 실패했습니다. 연결을 확인하고 다시 시도해 주세요.");
+        } finally {
+          signOutBtn.disabled = false;
+        }
+      });
+
+      async function initializeAuth() {
+        if (!supabaseConfigStarted) {
+          accountStatus.textContent = "이 브라우저에 저장";
+          signOutBtn.hidden = true;
+          return;
+        }
+        if (!supabaseConfigured) {
+          setAuthMessage("supabase/config.js에 Project URL과 publishable/anon key를 모두 설정해 주세요.");
+          accountStatus.textContent = "이 브라우저에 저장 · 서버 설정 필요";
+          return;
+        }
+        if (!supabaseClient) {
+          setAuthMessage(supabaseInitError || "Supabase 연결을 초기화하지 못했습니다. 설정을 확인해 주세요.");
+          accountStatus.textContent = "이 브라우저에 저장 · 서버 연결 오류";
+          return;
+        }
+        accountStatus.textContent = "연결 중...";
+        supabaseClient.auth.onAuthStateChange((_event, session) => {
+          setTimeout(() => { applyAuthSession(session); }, 0);
+        });
+        try {
+          const { data, error } = await supabaseClient.auth.getSession();
+          if (error) throw error;
+          if (data.session) await applyAuthSession(data.session);
+          else {
+            accountStatus.textContent = "이 브라우저에 저장 · 로그인 시 서버 저장";
+            setAuthMessage("로그인 없이 앱을 사용할 수 있습니다. 서버에 저장하려면 로그인하거나 회원가입하세요.");
+          }
+        } catch (error) {
+          console.error("인증 상태를 확인하지 못했습니다.", error);
+          setAuthMessage("Supabase에 연결하지 못했습니다. 설정과 네트워크를 확인해 주세요.");
+          accountStatus.textContent = "이 브라우저에 저장 · 서버 연결 오류";
+        }
+      }
+
       renderTemplates();
       renderEntries();
       const existingToday = getLogs()[localDate];
       if (existingToday) renderLog(localDate, existingToday);
+      initializeAuth();
     })();
   </script>
 </body>

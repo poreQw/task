@@ -26,12 +26,15 @@ jobs:
         uses: actions/checkout@v4
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
+      - name: Prepare site files
+        run: |
+          mkdir -p _site/supabase
+          cp index.html _site/index.html
+          cp supabase/config.js _site/supabase/config.js
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: |
-            ./index.html
-            ./supabase/config.js
+          path: ./_site
       - name: Deploy site
         id: deployment
         uses: actions/deploy-pages@v4

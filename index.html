@@ -320,6 +320,28 @@
     .guide-card h2 { margin: 0 0 12px; font-size: 17px; }
     .guide-card p { margin: 7px 0; color: #666b7d; font-size: 13px; line-height: 1.7; }
     .guide-card a { color: var(--purple); }
+    .guide-hero { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 22px; border: 1px solid #e8e1ff; border-radius: 16px; background: linear-gradient(115deg, #f3efff, #fff5ef); }
+    .guide-kicker { margin: 0 0 7px !important; color: var(--purple) !important; font-size: 10px !important; font-weight: 800; letter-spacing: 1px; }
+    .guide-hero h2 { margin: 0 0 7px; font-size: 24px; }
+    .guide-hero .guide-summary { max-width: 620px; margin: 0; }
+    .guide-launch { display: grid; flex: 0 0 auto; gap: 4px; padding: 12px 15px; border-radius: 11px; color: #fff !important; background: #5140bc; text-decoration: none; font-size: 13px; font-weight: 800; }
+    .guide-launch small { color: #e5defe; font-size: 10px; font-weight: 500; }
+    .guide-section { margin-top: 24px; }
+    .guide-section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .guide-section-head h3 { margin: 0; font-size: 15px; }
+    .guide-index { color: #988bbd; font-size: 11px; font-weight: 800; }
+    .guide-features { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 24px; }
+    .guide-feature { padding: 12px 0; border-top: 1px solid var(--line); }
+    .guide-feature strong { display: block; margin-bottom: 4px; font-size: 13px; }
+    .guide-feature p { margin: 0; }
+    .guide-actions { display: flex; flex-wrap: wrap; gap: 9px; }
+    .guide-action { display: inline-flex; align-items: center; min-height: 38px; padding: 9px 12px; border: 1px solid var(--line); border-radius: 9px; color: #5140bc !important; background: #fff; font-size: 12px; font-weight: 700; text-decoration: none; }
+    .guide-action:hover { border-color: #c9bfff; background: #f8f6ff; }
+    .guide-note { margin-top: 17px !important; padding-top: 13px; border-top: 1px solid var(--line); }
+    @media (max-width: 760px) {
+      .guide-hero { align-items: flex-start; flex-direction: column; padding: 18px; }
+      .guide-features { grid-template-columns: 1fr; }
+    }
     .toast { border-radius: 99px; box-shadow: 0 8px 24px #24263a30; }
     @media (max-width: 1050px) {
       .app-shell { grid-template-columns: 220px minmax(0, 1fr); }
@@ -765,12 +787,38 @@
         </table>
       </div>
     </section>
-    <section class="card guide-card" id="guideContent">
-      <h2>업무일지 사용 가이드</h2>
-      <p>1. 업무일지를 작성하고 진행 상태를 선택하세요. 이름과 날짜를 입력하면 저장할 수 있으며, 작성 중인 내용은 자동 저장됩니다.</p>
-      <p>2. 대시보드에서 전체·완료·진행 중 기록과 최근 기록을 확인하세요. 목록에서 작성자·업무 내용·날짜·상태로 검색하고 기록을 열거나 삭제할 수 있습니다.</p>
-      <p>3. 보고서 화면에서 내용을 확인·수정하고 PDF로 저장하거나 공유할 수 있습니다. 날짜별 기록은 기존 내용을 수정하는 방식으로 관리됩니다.</p>
-      <p>4. 로그인 없이 이 브라우저에 저장하거나 로그인해 계정의 Supabase에 동기화할 수 있습니다. 기록과 템플릿은 전체 백업으로 보관하세요.</p>
+    <section class="card guide-card" id="guideContent" aria-labelledby="guideTitle">
+      <div class="guide-hero">
+        <div>
+          <p class="guide-kicker">DAILY WORK LOG</p>
+          <h2 id="guideTitle">하루기록 프로젝트 안내</h2>
+          <p class="guide-summary">하루의 업무와 배운 점을 정리하고, 기록을 검색·공유·보관하는 한국어 일일 업무일지 앱입니다.</p>
+        </div>
+        <a class="guide-launch" href="https://poreQw.github.io/task/" target="_blank" rel="noopener noreferrer">
+          서비스 열기
+          <small>poreQw.github.io/task</small>
+        </a>
+      </div>
+      <section class="guide-section" aria-labelledby="guideFeaturesTitle">
+        <div class="guide-section-head"><span class="guide-index">01</span><h3 id="guideFeaturesTitle">하나로 연결된 업무 도구</h3></div>
+        <div class="guide-features">
+          <div class="guide-feature"><strong>작성과 빠른 메모</strong><p>지시 업무, 완료 업무, 미해결 문제, 배운 내용과 내일 할 일을 기록하고 메모를 항목별로 분류합니다.</p></div>
+          <div class="guide-feature"><strong>현황과 기록 검색</strong><p>통계, 달력, 최근 기록을 보고 작성자·업무 내용·기간·진행 상태로 일지를 찾습니다.</p></div>
+          <div class="guide-feature"><strong>보고서와 PDF</strong><p>기록을 다시 열어 수정하고, 공유·복사·텍스트 저장 또는 A4 PDF 다운로드를 할 수 있습니다.</p></div>
+          <div class="guide-feature"><strong>템플릿과 체크리스트</strong><p>자주 쓰는 업무 내용을 템플릿으로 저장하고 내일 할 일을 체크리스트로 관리합니다.</p></div>
+          <div class="guide-feature"><strong>백업과 복원</strong><p>기록과 템플릿을 JSON으로 내보내고 기존 기록에 병합해 복원합니다.</p></div>
+          <div class="guide-feature"><strong>로컬 저장과 계정 동기화</strong><p>로그인 없이 현재 브라우저에 저장하거나, Supabase 계정으로 여러 기기에서 동기화합니다.</p></div>
+        </div>
+      </section>
+      <section class="guide-section" aria-labelledby="guideStartTitle">
+        <div class="guide-section-head"><span class="guide-index">02</span><h3 id="guideStartTitle">바로 시작하기</h3></div>
+        <div class="guide-actions">
+          <a class="guide-action" href="#dashboardPanel" data-guide-view="dashboardPanel">전체 현황</a>
+          <a class="guide-action" href="#writeLogPanel" data-guide-view="writeLogPanel">새 업무일지 작성</a>
+          <a class="guide-action" href="#logListPanel" data-guide-view="logListPanel">기록 검색·백업</a>
+        </div>
+        <p class="guide-note">기록을 열면 상세 보고서에서 수정, 공유, 복사, 텍스트 저장과 PDF 다운로드를 사용할 수 있습니다. Supabase 동기화를 사용하려면 서비스 설정이 필요하며, 설정하지 않아도 로컬 저장 기능은 사용할 수 있습니다.</p>
+      </section>
     </section>
       </main>
     </div>
@@ -1760,6 +1808,12 @@
           }
           event.preventDefault();
           showView(viewId);
+        });
+      });
+      guide.querySelectorAll("[data-guide-view]").forEach((link) => {
+        link.addEventListener("click", (event) => {
+          event.preventDefault();
+          showView(link.dataset.guideView);
         });
       });
 

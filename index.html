@@ -795,7 +795,7 @@
           <p class="guide-summary">하루의 업무와 배운 점을 정리하고, 기록을 검색·공유·보관하는 한국어 일일 업무일지 앱입니다.</p>
         </div>
         <a class="guide-launch" href="https://github.com/poreQw/task" target="_blank" rel="noopener noreferrer">
-          서비스 열기
+          GitHub 저장소 열기
           <small>github.com/poreQw/task</small>
         </a>
       </div>
@@ -991,17 +991,20 @@
         toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
       }
 
-      function makeReport(date, log) {
-        const reportDate = date.replaceAll("-", ".");
-        const nextTasks = Array.isArray(log.tasks) && log.tasks.length
+      function getNextTaskText(log) {
+        return Array.isArray(log.tasks) && log.tasks.length
           ? log.tasks.map((task) => `${task.done ? "☑" : "☐"} ${task.text}`).join("\n")
           : log.next;
+      }
+
+      function makeReport(date, log) {
+        const reportDate = date.replaceAll("-", ".");
         const sections = [
           ["① 오늘 지시받은 업무 (今日指派工作)", log.assigned],
           ["② 오늘 완료한 업무 (今日完成工作)", log.completed],
           ["③ 해결하지 못한 문제 (未解决问题)", log.unresolved],
           ["④ 오늘 배운 내용 (今日 容 学习内)", log.learned],
-          ["⑤ 내일 할 일 (明日)", nextTasks]
+          ["⑤ 내일 할 일 (明日)", getNextTaskText(log)]
         ];
         return [
           "일일 업무일지",
@@ -1081,7 +1084,7 @@
           ["② 오늘 완료한 업무 (今日完成工作)", log.completed],
           ["③ 해결하지 못한 문제 (未解决问题)", log.unresolved],
           ["④ 오늘 배운 내용 (今日 容 学习内)", log.learned],
-          ["⑤ 내일 할 일 (明日)", log.next]
+          ["⑤ 내일 할 일 (明日)", getNextTaskText(log)]
         ];
         startPage();
         sections.forEach(([title, value]) => {
@@ -1504,7 +1507,7 @@
         previewLogData = null;
         currentTasks = [];
         document.getElementById("quickNotes").value = "";
-        result.classList.remove("show");
+        hideReport();
         renderTaskList();
         renderEntries();
         showView("writeLogPanel");
@@ -1567,7 +1570,7 @@
               if (selectedDate === date) {
                 selectedDate = "";
                 previewLogData = null;
-                result.classList.remove("show");
+                hideReport();
                 form.reset();
                 dateInput.value = date;
               }
@@ -1598,7 +1601,7 @@
           selectedDate = "";
           previewLogData = null;
           currentTasks = [];
-          result.classList.remove("show");
+          hideReport();
           document.getElementById("quickNotes").value = "";
           fields.slice(1).forEach((field) => { document.getElementById(field).value = ""; });
           statusInput.value = "진행 중";
@@ -1795,8 +1798,11 @@
         activateNav(viewId);
         window.history.replaceState(null, "", `#${viewId}`);
       }
+      function hideReport() {
+        result.classList.remove("show");
+        if (location.hash === "#reportPanel") showView("dashboardPanel");
+      }
       const initialView = views.has(location.hash.slice(1)) ? location.hash.slice(1) : "dashboardPanel";
-      showView(initialView);
       navLinks.forEach((link) => {
         link.addEventListener("click", (event) => {
           const viewId = link.hash.slice(1);
@@ -2080,7 +2086,7 @@
         if (current) renderLog(dateInput.value, current);
         else {
           selectedDate = "";
-          result.classList.remove("show");
+          hideReport();
           renderEntries();
         }
       }
@@ -2098,7 +2104,7 @@
             form.reset();
             dateInput.value = localDate;
             currentTasks = [];
-            result.classList.remove("show");
+            hideReport();
             renderTaskList();
           }
           authOverlay.hidden = true;
@@ -2116,7 +2122,7 @@
         dateInput.value = localDate;
         currentTasks = [];
         selectedDate = "";
-        result.classList.remove("show");
+        hideReport();
         renderTaskList();
         openAuthBtn.hidden = true;
         signOutBtn.hidden = false;
@@ -2259,6 +2265,9 @@
       renderEntries();
       const existingToday = getLogs()[localDate];
       if (existingToday) renderLog(localDate, existingToday);
+      showView(initialView === "reportPanel" && !result.classList.contains("show")
+        ? "dashboardPanel"
+        : initialView);
       initializeAuth();
     })();
   </script>

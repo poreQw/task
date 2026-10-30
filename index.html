@@ -42,11 +42,15 @@
     .auth-card label { display: grid; gap: 7px; margin-top: 15px; color: #555b6e; font-size: 13px; font-weight: 700; }
     .auth-card .auth-actions { display: flex; gap: 9px; margin-top: 20px; }
     .auth-card .auth-actions .btn { flex: 1; }
+    .auth-card .btn:disabled, .auth-password-wrap button:disabled { cursor: wait; }
     .auth-mode-switch { margin: 15px 0 0 !important; text-align: center; }
     .auth-password-wrap { display: flex; gap: 8px; }
     .auth-password-wrap input { flex: 1; }
     .auth-password-wrap button { padding: 0 12px; border: 1px solid var(--line); border-radius: 9px; color: #555b6e; background: #f7f7fa; font-size: 12px; }
     .auth-switch { padding: 0; border: 0; color: var(--purple); background: transparent; font: inherit; font-weight: 700; }
+    .auth-reset-row { display: flex; justify-content: flex-end; margin-top: 8px; }
+    .auth-reset-row button { padding: 3px 0; border: 0; color: var(--purple); background: transparent; font-size: 12px; font-weight: 700; }
+    .auth-hint { margin: 7px 0 0 !important; color: var(--muted); font-size: 11px !important; }
     .auth-message { min-height: 20px; color: var(--purple) !important; }
     .auth-message.error { color: #c53b50 !important; }
     main { width: min(1120px, calc(100% - 40px)); margin: 42px auto 72px; }
@@ -339,12 +343,246 @@
       .form-tools, .step-actions > .btn { width: 100%; }
       .form-tools .btn { width: 100%; }
     }
+    :root {
+      --ink: #28233f;
+      --muted: #77738d;
+      --line: rgb(255 255 255 / 76%);
+      --purple: #704fe2;
+      --purple-light: #f0ebff;
+      --surface: rgb(255 255 255 / 64%);
+      --bg: #f1eff9;
+    }
+    body {
+      min-height: 100vh;
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(ellipse at 9% 12%, rgb(181 160 255 / 48%), transparent 29rem),
+        radial-gradient(ellipse at 91% 24%, rgb(255 203 186 / 47%), transparent 27rem),
+        radial-gradient(ellipse at 65% 94%, rgb(174 222 255 / 40%), transparent 31rem);
+      background-attachment: fixed;
+    }
+    .side-nav {
+      background:
+        radial-gradient(ellipse at 12% 0%, rgb(110 147 255 / 23%), transparent 52%),
+        linear-gradient(160deg, rgb(22 39 76 / 96%), rgb(33 35 82 / 91%));
+      border-right: 1px solid rgb(255 255 255 / 16%);
+      box-shadow: 8px 0 34px rgb(46 38 94 / 12%), inset -1px 0 rgb(255 255 255 / 7%);
+      backdrop-filter: blur(24px) saturate(145%);
+      -webkit-backdrop-filter: blur(24px) saturate(145%);
+    }
+    .nav-link {
+      border: 1px solid transparent;
+      transition: background .2s ease, border-color .2s ease, transform .2s ease;
+    }
+    .nav-link:hover {
+      border-color: rgb(255 255 255 / 13%);
+      background: rgb(255 255 255 / 9%);
+      transform: translateX(2px);
+    }
+    .nav-link.active {
+      border-color: rgb(255 255 255 / 23%);
+      background: linear-gradient(120deg, rgb(255 255 255 / 20%), rgb(255 255 255 / 8%));
+      box-shadow: inset 0 1px rgb(255 255 255 / 16%), 0 8px 20px rgb(7 13 40 / 15%);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+    .topbar {
+      position: sticky;
+      z-index: 4;
+      top: 0;
+      background: rgb(255 255 255 / 58%);
+      border-bottom-color: rgb(255 255 255 / 72%);
+      box-shadow: 0 8px 28px rgb(51 43 92 / 5%);
+      backdrop-filter: blur(24px) saturate(155%);
+      -webkit-backdrop-filter: blur(24px) saturate(155%);
+    }
+    .brand-mark {
+      border: 1px solid rgb(255 255 255 / 55%);
+      box-shadow: 0 7px 18px rgb(101 72 221 / 29%), inset 0 1px rgb(255 255 255 / 45%);
+    }
+    .top-date, .account-tools button {
+      border: 1px solid rgb(255 255 255 / 84%);
+      background: rgb(255 255 255 / 58%);
+      box-shadow: 0 3px 12px rgb(54 44 91 / 5%), inset 0 1px rgb(255 255 255 / 82%);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .intro {
+      border-color: rgb(255 255 255 / 78%);
+      background: linear-gradient(118deg, rgb(235 228 255 / 74%), rgb(249 242 255 / 66%) 55%, rgb(255 239 229 / 73%));
+      box-shadow: 0 18px 44px rgb(67 53 119 / 10%), inset 0 1px rgb(255 255 255 / 90%);
+      backdrop-filter: blur(22px) saturate(140%);
+      -webkit-backdrop-filter: blur(22px) saturate(140%);
+    }
+    .intro::after {
+      border-color: rgb(255 255 255 / 40%);
+      box-shadow: inset 0 0 24px rgb(255 255 255 / 28%), 0 0 50px rgb(255 255 255 / 28%);
+    }
+    .card, .guide-card {
+      border-color: rgb(255 255 255 / 82%);
+      background: rgb(255 255 255 / 68%);
+      box-shadow: 0 16px 42px rgb(54 43 92 / 9%), inset 0 1px rgb(255 255 255 / 92%);
+      backdrop-filter: blur(22px) saturate(135%);
+      -webkit-backdrop-filter: blur(22px) saturate(135%);
+    }
+    .quick-notes {
+      border-color: rgb(221 210 255 / 68%);
+      background: linear-gradient(135deg, rgb(245 240 255 / 80%), rgb(255 255 255 / 52%));
+      box-shadow: inset 0 1px rgb(255 255 255 / 88%);
+    }
+    .question:not(:first-child) {
+      border-color: rgb(255 255 255 / 84%);
+      background: rgb(255 255 255 / 58%);
+      box-shadow: inset 0 1px rgb(255 255 255 / 85%);
+    }
+    .question:not([data-step="0"]) textarea,
+    .quick-notes textarea,
+    textarea, input[type="text"], input[type="date"],
+    .status-input, #filterStatus, .archive-tools input {
+      border-color: rgb(224 218 239 / 86%);
+      background: rgb(255 255 255 / 78%);
+    }
+    .entry { background: rgb(255 255 255 / 58%); }
+    .entry:hover, .entry.selected {
+      border-color: rgb(173 151 245 / 72%);
+      background: rgb(246 242 255 / 86%);
+    }
+    .auth-overlay {
+      background: rgb(239 236 248 / 62%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    .auth-card {
+      border-color: rgb(255 255 255 / 85%);
+      background: rgb(255 255 255 / 78%);
+      box-shadow: 0 24px 70px rgb(44 37 83 / 17%), inset 0 1px rgb(255 255 255 / 94%);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+    #accountStatus {
+      display: inline-flex; align-items: center; gap: 7px; max-width: 190px;
+      padding: 8px 11px; border: 1px solid rgb(255 255 255 / 84%);
+      border-radius: 99px; background: rgb(255 255 255 / 48%);
+      box-shadow: inset 0 1px rgb(255 255 255 / 72%);
+    }
+    #accountStatus::before {
+      flex: 0 0 7px; width: 7px; height: 7px; border-radius: 50%;
+      background: #9a92ad; content: "";
+    }
+    #accountStatus[data-state="cloud"]::before { background: #1baf82; box-shadow: 0 0 0 3px rgb(27 175 130 / 13%); }
+    #accountStatus[data-state="error"]::before { background: #dc6472; box-shadow: 0 0 0 3px rgb(220 100 114 / 12%); }
+    #accountStatus[data-state="loading"]::before { background: #e6a43b; animation: account-pulse 1.1s ease-in-out infinite alternate; }
+    .auth-card .auth-actions .btn { min-height: 44px; }
+    .auth-card .auth-password-wrap button { min-width: 62px; }
+    .auth-card .auth-reset-row button:hover, .auth-switch:hover { text-decoration: underline; }
+    @media (prefers-reduced-motion: no-preference) {
+      .view-panel.active > * {
+        animation: panel-arrive .48s cubic-bezier(.2, .75, .25, 1) both;
+      }
+      .view-panel.active > *:nth-child(2) { animation-delay: .06s; }
+      .view-panel.active > *:nth-child(3) { animation-delay: .12s; }
+      .view-panel.active > *:nth-child(4) { animation-delay: .18s; }
+      .view-panel.active > *:nth-child(5) { animation-delay: .24s; }
+      .intro::after { animation: glass-drift 8s ease-in-out infinite alternate; }
+      .card, .guide-card {
+        transition: box-shadow .24s ease, transform .24s cubic-bezier(.2, .75, .25, 1);
+      }
+      .card:hover, .guide-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 20px 48px rgb(54 43 92 / 12%), inset 0 1px rgb(255 255 255 / 92%);
+      }
+      .entry-list > .entry {
+        animation: panel-arrive .32s ease both;
+      }
+      .entry-list > .entry:nth-child(2) { animation-delay: .035s; }
+      .entry-list > .entry:nth-child(3) { animation-delay: .07s; }
+      .entry-list > .entry:nth-child(4) { animation-delay: .105s; }
+    }
+    @keyframes panel-arrive {
+      from { opacity: 0; transform: translateY(12px) scale(.99); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes glass-drift {
+      from { transform: translate3d(0, 0, 0) rotate(-5deg); }
+      to { transform: translate3d(-12px, 10px, 0) rotate(5deg); }
+    }
+    @keyframes account-pulse {
+      from { opacity: .55; box-shadow: 0 0 0 2px rgb(230 164 59 / 9%); }
+      to { opacity: 1; box-shadow: 0 0 0 4px rgb(230 164 59 / 18%); }
+    }
+    .nav-link .nav-icon {
+      transition: transform .24s cubic-bezier(.2, .75, .25, 1), color .2s ease;
+    }
+    .nav-link:hover .nav-icon, .nav-link.active .nav-icon {
+      transform: scale(1.08);
+    }
+    .btn, .small-btn, .calendar-nav button, .account-tools button {
+      transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease, filter .18s ease;
+    }
+    .btn:active:not(:disabled), .small-btn:active:not(:disabled),
+    .calendar-nav button:active, .account-tools button:active {
+      transform: scale(.97);
+    }
+    .small-btn:hover:not(:disabled), .calendar-nav button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 12px rgb(54 44 91 / 10%);
+    }
+    .calendar-day {
+      transition: background-color .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease;
+    }
+    .calendar-day:hover:not(:disabled) {
+      transform: scale(1.08);
+      box-shadow: 0 4px 10px rgb(54 44 91 / 10%);
+    }
+    .question, .quick-notes {
+      transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+    }
+    .question:focus-within, .quick-notes:focus-within {
+      border-color: rgb(166 143 242 / 78%);
+      box-shadow: 0 0 0 3px rgb(114 85 232 / 9%), inset 0 1px rgb(255 255 255 / 88%);
+    }
+    :where(a, button, input, textarea, select):focus-visible {
+      outline: 3px solid rgb(112 79 226 / 48%);
+      outline-offset: 3px;
+    }
+    .toast {
+      transition: opacity .28s ease, transform .38s cubic-bezier(.2, .8, .25, 1);
+    }
+    @media (max-width: 760px) {
+      .nav-link:hover { transform: translateY(-1px); }
+      .view-panel.active > * { animation-duration: .36s; }
+      .topbar { padding-right: 14px; padding-left: 14px; }
+      .brand { gap: 8px; font-size: 17px; white-space: nowrap; }
+      .brand-mark { flex: 0 0 34px; width: 34px; height: 34px; }
+      .account-tools { min-width: 0; gap: 5px; }
+      .account-tools button { padding: 8px 9px; white-space: nowrap; }
+      #accountStatus { max-width: 112px; padding: 7px 9px; font-size: 11px; }
+      .auth-overlay { padding: 14px; }
+      .auth-card { max-height: min(92vh, 720px); overflow-y: auto; padding: 23px; }
+    }
+    @media (max-width: 400px) {
+      .topbar { padding-right: 10px; padding-left: 10px; }
+      .brand { gap: 6px; font-size: 15px; }
+      .brand-mark { flex-basis: 30px; width: 30px; height: 30px; }
+      .account-tools { gap: 4px; }
+      .account-tools button { padding: 7px 8px; font-size: 11px; }
+      #accountStatus { max-width: 92px; padding: 6px 7px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
     @media print {
       body { background: #fff; }
       .side-nav, .guide-card { display: none !important; }
       .app-shell { display: block; }
       .view-panel { display: none !important; }
       #reportPanel { display: block !important; }
+      .result { background: #fff; backdrop-filter: none; -webkit-backdrop-filter: none; }
       .result-body { padding: 0; background: #fff; color: #111; }
     }
   </style>
@@ -378,7 +616,7 @@
         <div class="brand"><span class="brand-mark">하</span> 하루기록</div>
         <div class="account-tools">
           <span class="top-date" id="topDate"></span>
-          <span id="accountStatus">이 브라우저에 저장</span>
+          <span id="accountStatus" data-state="local" title="이 브라우저에 저장">이 브라우저에 저장</span>
           <button id="openAuthBtn" type="button" hidden>서버 로그인</button>
           <button id="signOutBtn" type="button" hidden>로그아웃</button>
         </div>
@@ -538,7 +776,7 @@
     </div>
   </div>
   <div class="toast" id="toast" role="status"></div>
-  <section class="auth-overlay" id="authOverlay" hidden aria-labelledby="authTitle">
+  <section class="auth-overlay" id="authOverlay" hidden role="dialog" aria-modal="true" aria-labelledby="authTitle" aria-describedby="authDescription">
     <form class="auth-card" id="authForm">
       <div class="brand"><span class="brand-mark">하</span> 하루기록</div>
       <h2 id="authTitle">로그인</h2>
@@ -549,7 +787,9 @@
           <input id="authPassword" type="password" autocomplete="current-password" minlength="6" required>
           <button id="togglePasswordBtn" type="button" aria-label="비밀번호 표시">표시</button>
         </span>
+        <span class="auth-reset-row"><button id="resetPasswordBtn" type="button">비밀번호를 잊으셨나요?</button></span>
       </label>
+      <p class="auth-hint" id="authPasswordHint">비밀번호는 6자 이상 입력해 주세요.</p>
       <label id="confirmPasswordField" for="confirmPassword" hidden>비밀번호 확인
         <input id="confirmPassword" type="password" autocomplete="new-password" minlength="6">
       </label>
@@ -1647,10 +1887,29 @@
       const confirmPasswordInput = document.getElementById("confirmPassword");
       const confirmPasswordField = document.getElementById("confirmPasswordField");
       const authMailHelp = document.getElementById("authMailHelp");
+      const authEmailInput = document.getElementById("authEmail");
+      const resetPasswordBtn = document.getElementById("resetPasswordBtn");
+      let authReturnFocus = null;
       let authMode = "login";
+      const setAccountStatus = (message, state = "local") => {
+        accountStatus.textContent = message;
+        accountStatus.dataset.state = state;
+        accountStatus.title = message;
+      };
       const setAuthMessage = (message, isError = false) => {
         authMessage.textContent = message;
         authMessage.classList.toggle("error", isError);
+      };
+      const setAuthBusy = (busy) => {
+        authForm.querySelectorAll("input, button").forEach((control) => { control.disabled = busy; });
+        if (!busy) {
+          authSubmitBtn.disabled = !supabaseClient;
+          resetPasswordBtn.disabled = !supabaseClient || authMode !== "login";
+        }
+      };
+      const closeAuthDialog = () => {
+        authOverlay.hidden = true;
+        if (authReturnFocus && !authReturnFocus.hidden) authReturnFocus.focus();
       };
       function setAuthMode(mode) {
         authMode = mode;
@@ -1663,9 +1922,14 @@
         authModeBtn.textContent = isSignUp ? "이미 계정이 있어요" : "처음 방문하셨나요? 회원가입";
         confirmPasswordField.hidden = !isSignUp;
         confirmPasswordInput.required = isSignUp;
+        resetPasswordBtn.hidden = isSignUp;
+        document.getElementById("authPasswordHint").textContent = isSignUp
+          ? "비밀번호는 6자 이상이어야 합니다."
+          : "비밀번호를 잊으셨다면 이메일로 재설정할 수 있습니다.";
         authMailHelp.hidden = true;
         passwordInput.autocomplete = isSignUp ? "new-password" : "current-password";
         confirmPasswordInput.value = "";
+        setAuthBusy(false);
         setAuthMessage("");
       }
       authModeBtn.addEventListener("click", () => {
@@ -1682,14 +1946,67 @@
       openAuthBtn.hidden = !supabaseConfigStarted;
       openAuthBtn.addEventListener("click", () => {
         setAuthMode("login");
+        authReturnFocus = openAuthBtn;
         setAuthMessage(supabaseClient
           ? "로그인하면 업무일지를 계정에 연결해 서버에 저장합니다. 로그인 전에도 앱을 계속 사용할 수 있습니다."
           : supabaseInitError || "Supabase 설정을 확인해 주세요.");
         authOverlay.hidden = false;
-        document.getElementById("authEmail").focus();
+        authEmailInput.focus();
       });
       document.getElementById("closeAuthBtn").addEventListener("click", () => {
-        authOverlay.hidden = true;
+        closeAuthDialog();
+      });
+      authOverlay.addEventListener("click", (event) => {
+        if (event.target === authOverlay) closeAuthDialog();
+      });
+      authOverlay.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          event.preventDefault();
+          closeAuthDialog();
+          return;
+        }
+        if (event.key !== "Tab") return;
+        const focusable = [...authOverlay.querySelectorAll("button:not(:disabled), input:not(:disabled)")]
+          .filter((element) => !element.hidden && element.getClientRects().length);
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      });
+      resetPasswordBtn.addEventListener("click", async () => {
+        if (!supabaseClient) {
+          setAuthMessage(supabaseInitError || "Supabase 설정을 확인해 주세요.", true);
+          return;
+        }
+        if (!authEmailInput.value.trim() || !authEmailInput.checkValidity()) {
+          setAuthMessage("먼저 입력한 이메일 주소를 확인해 주세요.", true);
+          authEmailInput.focus();
+          return;
+        }
+        const email = authEmailInput.value.trim();
+        setAuthBusy(true);
+        setAuthMessage("재설정 이메일을 요청하고 있습니다...");
+        try {
+          const { error } = await supabaseClient.auth.resetPasswordForEmail(email);
+          if (error) throw error;
+          setAuthMessage("해당 이메일이 등록되어 있다면 비밀번호 재설정 안내를 보냈습니다. 받은 편지함을 확인해 주세요.");
+        } catch (error) {
+          console.error("비밀번호 재설정 이메일을 보내지 못했습니다.", error);
+          const message = (error.message || "").toLowerCase();
+          if (message.includes("rate limit") || message.includes("too many requests")) {
+            setAuthMessage("요청 횟수가 너무 많습니다. 잠시 기다린 뒤 다시 시도해 주세요.", true);
+          } else {
+            setAuthMessage("재설정 이메일을 보내지 못했습니다. 이메일 주소와 Supabase 설정을 확인해 주세요.", true);
+          }
+        } finally {
+          setAuthBusy(false);
+        }
       });
       async function loadCloudLogs(user) {
         const loaded = {};
@@ -1732,9 +2049,10 @@
           }
           authOverlay.hidden = true;
           signOutBtn.hidden = true;
-          accountStatus.textContent = supabaseClient
+          openAuthBtn.hidden = !supabaseConfigStarted;
+          setAccountStatus(supabaseClient
             ? "이 브라우저에 저장 · 로그인 시 서버 저장"
-            : "이 브라우저에 저장";
+            : "이 브라우저에 저장");
           renderEntries();
           return;
         }
@@ -1746,19 +2064,21 @@
         selectedDate = "";
         result.classList.remove("show");
         renderTaskList();
-        accountStatus.textContent = user.email || "로그인됨";
+        openAuthBtn.hidden = true;
         signOutBtn.hidden = false;
+        setAccountStatus(user.email || "로그인됨", "cloud");
         setAuthMessage("저장된 업무일지를 불러오는 중...");
         try {
           await loadCloudLogs(user);
-          authOverlay.hidden = true;
+          closeAuthDialog();
           authMessage.textContent = "";
         } catch (error) {
           console.error("클라우드 업무일지를 불러오지 못했습니다.", error);
           currentUser = null;
           logsCache = {};
           signOutBtn.hidden = true;
-          accountStatus.textContent = "이 브라우저에 저장 · 서버 연결 오류";
+          openAuthBtn.hidden = !supabaseConfigStarted;
+          setAccountStatus("이 브라우저에 저장 · 서버 연결 오류", "error");
           authOverlay.hidden = true;
           renderEntries();
           setAuthMessage("기록을 불러오지 못했습니다. Supabase SQL 설정과 네트워크를 확인해 주세요.");
@@ -1775,7 +2095,7 @@
           confirmPasswordInput.focus();
           return;
         }
-        authForm.querySelectorAll("input, button").forEach((control) => { control.disabled = true; });
+        setAuthBusy(true);
         setAuthMessage(authMode === "signup" ? "계정을 만들고 있습니다..." : "로그인 중...");
         try {
           if (authMode === "signup") {
@@ -1821,7 +2141,7 @@
             setAuthMessage("로그인하지 못했습니다. 이메일과 비밀번호를 확인해 주세요.", true);
           }
         } finally {
-          authForm.querySelectorAll("input, button").forEach((control) => { control.disabled = false; });
+          setAuthBusy(false);
         }
       });
 
@@ -1848,21 +2168,21 @@
 
       async function initializeAuth() {
         if (!supabaseConfigStarted) {
-          accountStatus.textContent = "이 브라우저에 저장";
+          setAccountStatus("이 브라우저에 저장");
           signOutBtn.hidden = true;
           return;
         }
         if (!supabaseConfigured) {
           setAuthMessage("supabase/config.js에 Project URL과 publishable/anon key를 모두 설정해 주세요.");
-          accountStatus.textContent = "이 브라우저에 저장 · 서버 설정 필요";
+          setAccountStatus("이 브라우저에 저장 · 서버 설정 필요", "error");
           return;
         }
         if (!supabaseClient) {
           setAuthMessage(supabaseInitError || "Supabase 연결을 초기화하지 못했습니다. 설정을 확인해 주세요.");
-          accountStatus.textContent = "이 브라우저에 저장 · 서버 연결 오류";
+          setAccountStatus("이 브라우저에 저장 · 서버 연결 오류", "error");
           return;
         }
-        accountStatus.textContent = "연결 중...";
+        setAccountStatus("연결 중...", "loading");
         supabaseClient.auth.onAuthStateChange((_event, session) => {
           setTimeout(() => { applyAuthSession(session); }, 0);
         });
@@ -1871,13 +2191,13 @@
           if (error) throw error;
           if (data.session) await applyAuthSession(data.session);
           else {
-            accountStatus.textContent = "이 브라우저에 저장 · 로그인 시 서버 저장";
+            setAccountStatus("이 브라우저에 저장 · 로그인 시 서버 저장");
             setAuthMessage("로그인 없이 앱을 사용할 수 있습니다. 서버에 저장하려면 로그인하거나 회원가입하세요.");
           }
         } catch (error) {
           console.error("인증 상태를 확인하지 못했습니다.", error);
           setAuthMessage("Supabase에 연결하지 못했습니다. 설정과 네트워크를 확인해 주세요.");
-          accountStatus.textContent = "이 브라우저에 저장 · 서버 연결 오류";
+          setAccountStatus("이 브라우저에 저장 · 서버 연결 오류", "error");
         }
       }
 

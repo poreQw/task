@@ -1951,6 +1951,8 @@
       const authEmailInput = document.getElementById("authEmail");
       const resetPasswordBtn = document.getElementById("resetPasswordBtn");
       const resendConfirmationBtn = document.getElementById("resendConfirmationBtn");
+      const authCallbackParams = new URLSearchParams(window.location.hash.slice(1));
+      const authCallbackError = authCallbackParams.get("error_code") || authCallbackParams.get("error");
       const authRedirectUrl = ["http:", "https:"].includes(window.location.protocol)
         ? new URL(window.location.pathname, window.location.origin).toString()
         : undefined;
@@ -1998,6 +2000,19 @@
         confirmPasswordInput.value = "";
         setAuthBusy(false);
         setAuthMessage("");
+      }
+      function showAuthCallbackError() {
+        setAuthMode("login");
+        authOverlay.hidden = false;
+        authMailHelp.hidden = false;
+        resendConfirmationBtn.hidden = false;
+        authReturnFocus = openAuthBtn;
+        if (authCallbackError === "otp_expired") {
+          setAuthMessage("이메일 확인 링크가 만료되었거나 이미 사용되었습니다. 가입 이메일을 입력하고 확인 이메일을 다시 보내 최신 링크를 열어 주세요.", true);
+        } else {
+          setAuthMessage("이메일 인증을 완료하지 못했습니다. 가입 이메일을 확인하고 새 확인 이메일을 요청해 주세요.", true);
+        }
+        authEmailInput.focus();
       }
       authModeBtn.addEventListener("click", () => {
         setAuthMode(authMode === "login" ? "signup" : "login");
@@ -2153,6 +2168,7 @@
             ? "이 브라우저에 저장 · 로그인 시 서버 저장"
             : "이 브라우저에 저장");
           renderEntries();
+          if (authCallbackError) showAuthCallbackError();
           return;
         }
         if (currentUser && currentUser.id === user.id) return;
@@ -2297,7 +2313,11 @@
           if (data.session) await applyAuthSession(data.session);
           else {
             setAccountStatus("이 브라우저에 저장 · 로그인 시 서버 저장");
-            setAuthMessage("로그인 없이 앱을 사용할 수 있습니다. 서버에 저장하려면 로그인하거나 회원가입하세요.");
+            if (authCallbackError) {
+              showAuthCallbackError();
+            } else {
+              setAuthMessage("로그인 없이 앱을 사용할 수 있습니다. 서버에 저장하려면 로그인하거나 회원가입하세요.");
+            }
           }
         } catch (error) {
           console.error("인증 상태를 확인하지 못했습니다.", error);

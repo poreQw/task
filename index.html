@@ -847,7 +847,8 @@
       </div>
       <p class="auth-mode-switch"><button class="auth-switch" id="authModeBtn" type="button">처음 방문하셨나요? 회원가입</button></p>
       <p class="auth-message" id="authMessage" role="status" aria-live="polite"></p>
-      <p class="auth-mail-help" id="authMailHelp" hidden>Supabase 대시보드에서 Authentication → Sign In / Providers → Email → Confirm email을 꺼 주세요. 이미 만들어진 계정은 설정을 끄는 것만으로 인증 상태가 바뀌지 않을 수 있습니다. Authentication → Users에서 기존 사용자를 확인하거나 관리자가 이메일을 확인 처리해 주세요. 계정을 삭제하면 연결된 업무일지도 함께 삭제될 수 있으니 삭제 전에 확인하세요.</p>
+      <button class="btn btn-secondary" id="resendConfirmationBtn" type="button" hidden>확인 이메일 다시 보내기</button>
+      <p class="auth-mail-help" id="authMailHelp" hidden>받은 편지함과 스팸함에서 확인 이메일을 찾아 링크를 눌러 주세요. 메일을 받을 수 없거나 계정 상태가 계속되면 Supabase 대시보드의 Authentication → Users에서 계정을 확인하세요. 기존 미인증 계정은 Confirm email 설정 변경만으로 인증되지 않습니다.</p>
     </form>
   </section>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1949,6 +1950,10 @@
       const authMailHelp = document.getElementById("authMailHelp");
       const authEmailInput = document.getElementById("authEmail");
       const resetPasswordBtn = document.getElementById("resetPasswordBtn");
+      const resendConfirmationBtn = document.getElementById("resendConfirmationBtn");
+      const authRedirectUrl = ["http:", "https:"].includes(window.location.protocol)
+        ? new URL(window.location.pathname, window.location.origin).toString()
+        : undefined;
       let authReturnFocus = null;
       let authMode = "login";
       const setAccountStatus = (message, state = "local") => {
@@ -1965,6 +1970,7 @@
         if (!busy) {
           authSubmitBtn.disabled = !supabaseClient;
           resetPasswordBtn.disabled = !supabaseClient || authMode !== "login";
+          resendConfirmationBtn.disabled = !supabaseClient;
         }
       };
       const closeAuthDialog = () => {
@@ -1976,13 +1982,14 @@
         const isSignUp = mode === "signup";
         document.getElementById("authTitle").textContent = isSignUp ? "계정 만들기" : "로그인";
         document.getElementById("authDescription").textContent = isSignUp
-          ? "이메일과 비밀번호를 등록하면 바로 계정을 사용할 수 있습니다."
+          ? "이메일과 비밀번호를 등록하세요. 이메일 확인이 필요한 경우 확인 후 로그인할 수 있습니다."
           : "계정에 로그인하면 내 업무일지를 안전하게 저장하고 다른 기기에서도 확인할 수 있습니다.";
         authSubmitBtn.textContent = isSignUp ? "가입하기" : "로그인";
         authModeBtn.textContent = isSignUp ? "이미 계정이 있어요" : "처음 방문하셨나요? 회원가입";
         confirmPasswordField.hidden = !isSignUp;
         confirmPasswordInput.required = isSignUp;
         resetPasswordBtn.hidden = isSignUp;
+        resendConfirmationBtn.hidden = true;
         document.getElementById("authPasswordHint").textContent = isSignUp
           ? "비밀번호는 6자 이상이어야 합니다."
           : "비밀번호를 잊으셨다면 이메일로 재설정할 수 있습니다.";
@@ -2063,6 +2070,38 @@
             setAuthMessage("요청 횟수가 너무 많습니다. 잠시 기다린 뒤 다시 시도해 주세요.", true);
           } else {
             setAuthMessage("재설정 이메일을 보내지 못했습니다. 이메일 주소와 Supabase 설정을 확인해 주세요.", true);
+          }
+        } finally {
+          setAuthBusy(false);
+        }
+      });
+      resendConfirmationBtn.addEventListener("click", async () => {
+        if (!supabaseClient) {
+          setAuthMessage(supabaseInitError || "Supabase 설정을 확인해 주세요.", true);
+          return;
+        }
+        if (!authEmailInput.value.trim() || !authEmailInput.checkValidity()) {
+          setAuthMessage("먼저 가입한 이메일 주소를 확인해 주세요.", true);
+          authEmailInput.focus();
+          return;
+        }
+        setAuthBusy(true);
+        setAuthMessage("확인 이메일을 요청하고 있습니다...");
+        try {
+          const { error } = await supabaseClient.auth.resend({
+            type: "signup",
+            email: authEmailInput.value.trim(),
+            options: authRedirectUrl ? { emailRedirectTo: authRedirectUrl } : undefined
+          });
+          if (error) throw error;
+          setAuthMessage("요청을 처리했습니다. 가입한 주소의 받은 편지함과 스팸함을 확인해 주세요. 이미 인증된 계정이라면 바로 로그인해 보세요.");
+        } catch (error) {
+          console.error("확인 이메일을 다시 보내지 못했습니다.", error);
+          const message = (error.message || "").toLowerCase();
+          if (error.code === "over_email_send_rate_limit" || message.includes("rate limit") || message.includes("too many requests")) {
+            setAuthMessage("이메일 요청 횟수가 너무 많습니다. 잠시 기다린 뒤 다시 시도해 주세요.", true);
+          } else {
+            setAuthMessage("확인 이메일을 보내지 못했습니다. 잠시 후 다시 시도하거나 Supabase Authentication 설정을 확인해 주세요.", true);
           }
         } finally {
           setAuthBusy(false);
@@ -2159,7 +2198,11 @@
         setAuthMessage(authMode === "signup" ? "계정을 만들고 있습니다..." : "로그인 중...");
         try {
           if (authMode === "signup") {
-            const { data, error } = await supabaseClient.auth.signUp({ email, password });
+            const { data, error } = await supabaseClient.auth.signUp({
+              email,
+              password,
+              options: authRedirectUrl ? { emailRedirectTo: authRedirectUrl } : undefined
+            });
             if (error) throw error;
             if (data.session) {
               setAuthMessage("가입이 완료되었습니다. 로그인 상태로 전환합니다.");
@@ -2168,8 +2211,9 @@
               document.getElementById("authEmail").value = email;
               setAuthMessage("이미 가입된 이메일입니다. 이 계정으로 로그인해 주세요.", true);
             } else {
-              setAuthMessage("계정은 생성됐지만 아직 로그인할 수 없습니다. Supabase 이메일 인증 설정과 기존 계정 상태를 확인해 주세요.", true);
+              setAuthMessage("계정이 생성되었습니다. 이메일 확인이 필요합니다. 확인 메일을 받지 못했다면 다시 보내기를 눌러 주세요.");
               authMailHelp.hidden = false;
+              resendConfirmationBtn.hidden = false;
             }
           } else {
             const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
@@ -2183,6 +2227,7 @@
           if (errorCode === "email_not_confirmed" || message.includes("email not confirmed") || message.includes("email is not confirmed")) {
             setAuthMessage("계정은 있지만 이메일 인증이 완료되지 않아 로그인할 수 없습니다.", true);
             authMailHelp.hidden = false;
+            resendConfirmationBtn.hidden = false;
           } else if (errorCode === "invalid_credentials" || message.includes("invalid login credentials")) {
             setAuthMessage("이메일 또는 비밀번호가 올바르지 않습니다. 가입한 주소와 비밀번호를 확인해 주세요.", true);
           } else if (errorCode === "user_not_found" || message.includes("user not found")) {

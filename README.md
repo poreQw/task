@@ -14,7 +14,7 @@
 1. Supabase에서 프로젝트를 만들고 **Project URL**과 공개용 **publishable key**(또는 legacy `anon` key)를 확인합니다. `service_role` key는 브라우저에 넣지 마세요.
 2. Supabase **SQL Editor**에서 [`supabase/schema.sql`](./supabase/schema.sql) 내용을 실행합니다. 테이블과 RLS 정책은 각 사용자가 자신의 기록만 조회·추가·수정·삭제하도록 제한합니다.
 3. [`supabase/config.js`](./supabase/config.js)에서 `url`과 `anonKey`를 프로젝트 값으로 바꿉니다. 이 파일의 anon/publishable key는 공개 클라이언트 키이며, 접근 제어는 RLS 정책이 담당합니다.
-4. 이메일과 비밀번호만으로 바로 가입·로그인하려면 Supabase 대시보드에서 **Authentication → Sign In / Providers → Email → Confirm email**을 꺼 주세요. 이 항목은 프로젝트 서버 설정이므로 앱 코드나 공개 키만으로 변경할 수 없습니다. 설정을 끄더라도 기존 미인증 계정은 자동으로 인증되지 않으므로 **Authentication → Users**에서 상태를 확인하고 관리자가 인증 처리해야 할 수 있습니다. 계정 삭제 시 연결된 업무일지도 함께 삭제될 수 있으므로 삭제 전에 백업하세요.
+4. Supabase 대시보드의 **Authentication → URL Configuration**에서 **Site URL**을 `https://poreqw.github.io/task/`로 설정하고 **Redirect URLs**에 `https://poreqw.github.io/task/`를 추가하세요. 앱은 가입 및 확인 이메일 재발송 시 현재 웹앱 주소로 돌아오도록 요청하므로, 이 주소가 허용 목록에 없으면 이메일 링크가 오류 페이지로 이동할 수 있습니다. **Confirm email**을 켜 두면 가입 후 이메일 확인이 필요합니다. 앱에서 확인 메일을 다시 요청할 수 있으며, 받은 편지함과 스팸함에서 메일을 확인하세요. 메일을 받지 못하거나 기존 계정이 계속 로그인되지 않으면 **Authentication → Users**에서 계정 확인 상태를 확인하고 관리자가 인증 처리해야 할 수 있습니다. 기존 미인증 계정은 **Confirm email** 설정 변경만으로 인증되지 않습니다. 이메일 확인 없이 즉시 가입·로그인하도록 바꾸려면 Supabase 대시보드의 **Authentication → Sign In / Providers → Email → Confirm email**을 끄세요. 계정 삭제 시 연결된 업무일지도 함께 삭제될 수 있으므로 삭제 전에 백업하세요.
 5. 설정 파일과 변경 사항을 `main` 브랜치에 올리면 GitHub Actions가 GitHub Pages에 배포합니다. 별도의 GitHub 토큰은 필요하지 않습니다. Pages의 소스는 **GitHub Actions**여야 합니다.
 
 앱은 로그인 없이 열어 사용할 수 있으며, 로그인 전 기록은 이 브라우저에 저장됩니다. **서버 저장과 기기 간 동기화가 필요할 때만 로그인**하세요. 클라우드 기록은 Supabase에, 템플릿은 현재 브라우저에 저장됩니다. 기존 로컬 기록은 전체 백업 후 로그인한 계정에서 **백업 복원**으로 옮길 수 있습니다. Supabase 설정을 비워 두어도 앱은 로컬 저장 모드로 동작합니다.

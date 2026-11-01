@@ -1792,12 +1792,12 @@
       const activateNav = (activeLink) => {
         navLinks.forEach((link) => link.classList.toggle("active", link.hash === `#${activeLink}`));
       };
-      function showView(viewId) {
+      function showView(viewId, updateHistory = true) {
         const view = views.get(viewId);
         if (!view) return;
         views.forEach((panel) => panel.classList.toggle("active", panel === view));
         activateNav(viewId);
-        window.history.replaceState(null, "", `#${viewId}`);
+        if (updateHistory) window.history.replaceState(null, "", `#${viewId}`);
       }
       function hideReport() {
         result.classList.remove("show");
@@ -1951,8 +1951,19 @@
       const authEmailInput = document.getElementById("authEmail");
       const resetPasswordBtn = document.getElementById("resetPasswordBtn");
       const resendConfirmationBtn = document.getElementById("resendConfirmationBtn");
-      const authCallbackParams = new URLSearchParams(window.location.hash.slice(1));
-      const authCallbackError = authCallbackParams.get("error_code") || authCallbackParams.get("error");
+      const authCallbackHashParams = new URLSearchParams(window.location.hash.slice(1));
+      const authCallbackQueryParams = new URLSearchParams(window.location.search);
+      let authCallbackError = authCallbackHashParams.get("error_code") ||
+        authCallbackHashParams.get("error") ||
+        authCallbackQueryParams.get("error_code") ||
+        authCallbackQueryParams.get("error");
+      const authTokenHash = authCallbackQueryParams.get("token_hash") ||
+        authCallbackHashParams.get("token_hash");
+      const authOtpType = authCallbackQueryParams.get("type") || authCallbackHashParams.get("type");
+      const hasImplicitAuthCallback = authCallbackHashParams.has("access_token") ||
+        authCallbackHashParams.has("refresh_token") ||
+        authCallbackQueryParams.has("access_token");
+      const hasAuthCallback = Boolean(authCallbackError || authTokenHash || hasImplicitAuthCallback);
       const authRedirectUrl = ["http:", "https:"].includes(window.location.protocol)
         ? new URL(window.location.pathname, window.location.origin).toString()
         : undefined;
@@ -2013,6 +2024,9 @@
           setAuthMessage("이메일 인증을 완료하지 못했습니다. 가입 이메일을 확인하고 새 확인 이메일을 요청해 주세요.", true);
         }
         authEmailInput.focus();
+      }
+      function cleanAuthCallbackUrl() {
+        window.history.replaceState(null, "", window.location.pathname);
       }
       authModeBtn.addEventListener("click", () => {
         setAuthMode(authMode === "login" ? "signup" : "login");
@@ -2308,13 +2322,47 @@
           setTimeout(() => { applyAuthSession(session); }, 0);
         });
         try {
+          let authVerificationSucceeded = false;
+          if (authTokenHash) {
+            cleanAuthCallbackUrl();
+            const supportedOtpTypes = new Set(["signup", "email", "magiclink", "recovery", "invite", "email_change"]);
+            if (!supportedOtpTypes.has(authOtpType)) {
+              authCallbackError = "invalid_callback";
+            } else {
+              try {
+                const { error } = await supabaseClient.auth.verifyOtp({
+                  token_hash: authTokenHash,
+                  type: authOtpType
+                });
+                if (error) throw error;
+                authVerificationSucceeded = true;
+              } catch (error) {
+                console.error("이메일 확인 링크를 검증하지 못했습니다.", error);
+                authCallbackError = error.code || "otp_expired";
+              }
+            }
+          }
           const { data, error } = await supabaseClient.auth.getSession();
           if (error) throw error;
-          if (data.session) await applyAuthSession(data.session);
+          if (data.session) {
+            if (hasImplicitAuthCallback) cleanAuthCallbackUrl();
+            await applyAuthSession(data.session);
+          }
           else {
             setAccountStatus("이 브라우저에 저장 · 로그인 시 서버 저장");
+            if (hasImplicitAuthCallback && !authCallbackError) {
+              authCallbackError = "invalid_callback";
+            }
             if (authCallbackError) {
+              cleanAuthCallbackUrl();
               showAuthCallbackError();
+            } else if (authVerificationSucceeded) {
+              cleanAuthCallbackUrl();
+              setAuthMode("login");
+              authOverlay.hidden = false;
+              authReturnFocus = openAuthBtn;
+              setAuthMessage("이메일 확인이 완료되었습니다. 이제 가입한 이메일과 비밀번호로 로그인해 주세요.");
+              authEmailInput.focus();
             } else {
               setAuthMessage("로그인 없이 앱을 사용할 수 있습니다. 서버에 저장하려면 로그인하거나 회원가입하세요.");
             }
@@ -2332,7 +2380,7 @@
       if (existingToday) renderLog(localDate, existingToday);
       showView(initialView === "reportPanel" && !result.classList.contains("show")
         ? "dashboardPanel"
-        : initialView);
+        : initialView, !hasAuthCallback);
       initializeAuth();
     })();
   </script>

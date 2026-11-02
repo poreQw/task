@@ -30,6 +30,8 @@ jobs:
         run: |
           mkdir -p _site/supabase
           cp index.html _site/index.html
+          cp styles.css _site/styles.css
+          cp app.js _site/app.js
           cp supabase/config.js _site/supabase/config.js
       - name: Upload site
         uses: actions/upload-pages-artifact@v5
